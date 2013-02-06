@@ -1,0 +1,22 @@
+{
+  "name": "base",
+  "version": "1.0.0",
+  "root": "handy",
+  "description": "移动Web开发的基础样式和脚本",
+  "homepage": "",
+  "author": "Denis",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:handyjs/base.git"
+  },
+  "bugs": {
+    "url": "https://github.com/handyjs/base/issues"
+  },
+  "license": "MIT",
+  "dependencies": {
+  },
+  "tests": ["base"],
+  "output": {
+    "reset.css": ["./css/reset.less"]
+  }
+}
