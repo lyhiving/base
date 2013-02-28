@@ -17,6 +17,6 @@
   },
   "tests": ["base"],
   "output": {
-    "reset.css": ["./css/reset.less"]
+    "css/reset.css": ["css/reset.less"]
   }
 }
