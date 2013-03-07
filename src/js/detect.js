@@ -6,7 +6,8 @@ define(function (require, exports, module) {
     android = ua.match(/Android\s+([\d.]+)/),
     windowsphone = ua.match(/Windows\sPhone(?:\sOS)?\s([\d.]+)/),
     ie = ua.match(/IEMobile\/([\d.]+)/),
-    touch = "ontouchend" in document;
+    touchevent = 'ontouchend' in document,
+    inputevent = 'oninput' in document;
 
   iphone && (os.ios = true, os.version = iphone[1].replace(/_/g, '.'));
   ipad && (os.ios = true, os.version = ipad[1].replace(/_/g, '.'));
@@ -15,6 +16,7 @@ define(function (require, exports, module) {
   //browser
   ie && (browser.ie = true, browser.version = ie[1]);
   //support
-  touch && (support.touch = true);
+  touchevent && (support.touchevent = true);
+  inputevent && (support.inputevent = true);
   return {os: os, browser: browser, support: support};
 });
