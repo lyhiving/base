@@ -19,13 +19,5 @@
   "output": {
     "css/reset.css": ["css/reset.css"],
     "js/detect.js": ["js/detect.js"]
-  },
-  "deploy": {
-    "default": {
-      "user": "admin",
-      "pass": "alipaydev",
-      "host": "assets.p76.alipay.net",
-      "path": "/home/admin/wwwroot/assets/"
-    }
   }
 }
