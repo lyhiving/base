@@ -13,8 +13,6 @@
     "url": "https://github.com/handyjs/base/issues"
   },
   "license": "MIT",
-  "dependencies": {
-  },
   "tests": ["base"],
   "output": {
     "css/reset.css": ["css/reset.css"],
