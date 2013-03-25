@@ -16,6 +16,7 @@
   "tests": ["base"],
   "output": {
     "css/reset.css": ["css/reset.css"],
-    "js/detect.js": ["js/detect.js"]
+    "js/detect.js": ["js/detect.js"],
+    "js/viewport.js": ["js/viewport.js"]
   }
 }
