@@ -24,6 +24,7 @@ define(function (require, exports, module) {
     wp = ua.match(/Windows\sPhone(?:\sOS)?\s([\d.]+)/),
     webkit = ua.match(/WebKit\/([\d.]+)/),
     chrome = ua.match(/Chrome\/([\d.]+)/) || ua.match(/CriOS\/([\d.]+)/),
+    safari = ua.match(/AppleWebKit.+Version\/([\d.]+)/),
     ie = ua.match(/IEMobile\/([\d.]+)/),
     touch = "ontouchend" in document,
     pointer = navigator.msPointerEnabled,
@@ -42,6 +43,7 @@ define(function (require, exports, module) {
   wp && (os.wp = true, os.version = wp[1]);
   //browser
   webkit && (browser.webkit = true, browser.version = webkit[1]);
+  safari && (browser.safari = true, browser.version = safari[1]);
   chrome && (browser.chrome = true, browser.version = chrome[1]);
   ie && (browser.ie = true, browser.version = ie[1]);
   //support

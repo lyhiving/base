@@ -29,7 +29,7 @@ define(function (require, exports, module) {
       $(fullscreen);
 
       function fullscreenAdapt() {
-        if (Detect.os.iphone && !Detect.browser.chrome) {
+        if (Detect.os.iphone && !Detect.browser.safari) {
           return function () {
             bodyStyle.minHeight = document.documentElement.clientHeight + 60 + 'px';
             win.scrollTo(0, 0);
