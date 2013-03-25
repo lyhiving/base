@@ -36,12 +36,12 @@ define(function (require, exports, module) {
           }
         } else if (Detect.os.android) {
           return function () {
-            //bodyStyle.minHeight = win.outerHeight / win.devicePixelRatio + 'px';
+            bodyStyle.minHeight = win.outerHeight / win.devicePixelRatio + 'px';
             win.scrollTo(0, 1); //Android 2.x 需要scrollTo(0, 1)
           }
         } else {
           return function () {
-            //win.scrollTo(0, 0);
+            win.scrollTo(0, 0);
           }
 
         }
