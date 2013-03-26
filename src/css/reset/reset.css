@@ -1,3 +1,9 @@
+* {
+  -webkit-box-sizing:border-box;
+  -moz-box-sizing:border-box;
+  box-sizing:border-box;
+}
+
 body, div, dl, dt, dd, ul, ol, li, h1, h2, h3,
 h4, h5, h6, pre, code, form, fieldset, legend,
 input, textarea, p, blockquote, th, td {
@@ -15,9 +21,13 @@ fieldset, img {
 }
 
 address, caption, cite, code,
-dfn, em, strong, th, var {
+dfn, em, th, var {
   font-style:normal;
   font-weight:normal;
+}
+
+strong, b {
+  font-weight:700;
 }
 
 li {

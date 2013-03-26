@@ -1,9 +1,7 @@
 define(function (require, exports, module) {
 
-  var Detect = require('./detect'),
-    support = Detect.support,
-    prefix = Detect.prefix,
-    isIphoneorTouch = (Detect.os.iPhone || Detect.os.iTouch),
+  var Support = require('../detect/support'),
+    prefix = Support.prefix,
     IScroll;
 
   /*!
@@ -11,7 +9,6 @@ define(function (require, exports, module) {
    * Released under MIT license, http://cubiq.org/license
    */
   (function (window, document, Math) {
-    var dummyStyle = document.createElement('div').style;
 
     var getTime = (function () {
       //IE9.0+ FF18+ Chrome24+ Android4.0+ window.performance
@@ -30,7 +27,6 @@ define(function (require, exports, module) {
       };
 
     function prefixStyle(style) {
-      if (prefix === false) return false;
       if (prefix === '') return style;
       return prefix + style.charAt(0).toUpperCase() + style.substr(1);
     }
@@ -39,13 +35,36 @@ define(function (require, exports, module) {
     var TRANSITION_TIMING_FUNCTION = prefixStyle('transitionTimingFunction');
     var TRANSITION_DURATION = prefixStyle('transitionDuration');
 
-    var hasTransform = support.transform;
-    var has3d = support.trans3d;
-    var hasTouch = support.touch;
-    var hasPointer = support.pointer;
-    var hasTransition = support.transition;
-
+    var hasTransform = Support.transform;
+    var has3d = Support.trans3d;
+    var hasTouch = Support.touch;
+    var hasPointer = Support.pointer;
+    var hasTransition = Support.transition;
     var TRANSLATE_Z = has3d ? ' translateZ(0)' : '';
+
+    var EVENT = {};
+    if (hasTouch) {
+      EVENT = {
+        START: 'touchstart',
+        MOVE: 'touchmove',
+        END: 'touchend',
+        CANCEL: 'touchcancel'
+      };
+    } else if (hasPointer) {
+      EVENT = {
+        START: 'MSPointerDown',
+        MOVE: 'MSPointerMove',
+        END: 'MSPointerUp',
+        CANCEL: 'MSPointerCancel'
+      };
+    } else {
+      EVENT = {
+        START: 'mousedown',
+        MOVE: 'mousemove',
+        END: 'mouseup',
+        CANCEL: 'mousecancel'
+      };
+    }
 
     function addEvent(el, type, fn, capture) {
       el.addEventListener(type, fn, !!capture);
@@ -55,11 +74,11 @@ define(function (require, exports, module) {
       el.removeEventListener(type, fn, !!capture);
     }
 
-    function getComputedPosition(el, useTransform) {
+    function getComputedPosition(el) {
       var matrix = getComputedStyle(el, null),
         x, y;
 
-      if (useTransform) {
+      if (hasTransform) {
         matrix = matrix[TRANSFORM].split(')')[0].split(', ');
         x = +(matrix[12] || matrix[4]);
         y = +(matrix[13] || matrix[5]);
@@ -109,12 +128,12 @@ define(function (require, exports, module) {
         scrollY: true,
         lockDirection: true,
         overshoot: true,
-        momentum: true,
+        //momentum: true,
         //eventPassthrough: false,	TODO: preserve native vertical scroll on horizontal JS scroll (and vice versa)
 
         HWCompositing: true,		// set to false to skip the hardware compositing
-        useTransition: true,
-        useTransform: true,
+        //useTransition: true,
+        //useTransform: true,
 
         scrollbars: true,
         interactiveScrollbars: false,
@@ -131,11 +150,8 @@ define(function (require, exports, module) {
         TRANSLATE_Z = '';
       }
 
-      this.options.useTransition = hasTransition && this.options.useTransition;
-      this.options.useTransform = hasTransform && this.options.useTransform;
-
       // default easing
-      if (this.options.useTransition) {
+      if (hasTransition) {
         this.scroller.style[TRANSITION_TIMING_FUNCTION] = 'cubic-bezier(0.33,0.66,0.66,1)';
       }
 
@@ -145,15 +161,7 @@ define(function (require, exports, module) {
 
       addEvent(window, 'orientationchange', this);
       addEvent(window, 'resize', this);
-
-      if (hasTouch) {
-        addEvent(this.wrapper, 'touchstart', this);
-      } else if (hasPointer) {
-        addEvent(this.wrapper, 'MSPointerDown', this);
-      } else {
-        addEvent(this.wrapper, 'mousedown', this);
-      }
-
+      addEvent(this.wrapper, EVENT.START, this);
       addEvent(this.scroller, 'transitionend', this);
       addEvent(this.scroller, 'webkitTransitionEnd', this);
       addEvent(this.scroller, 'oTransitionEnd', this);
@@ -162,24 +170,14 @@ define(function (require, exports, module) {
 
     IScroll.prototype.handleEvent = function (e) {
       switch (e.type) {
-        case 'touchstart':
-        case 'MSPointerDown':
-        case 'mousedown':
+        case EVENT.START:
           this._start(e);
           break;
-        case 'touchmove':
-        case 'MSPointerMove':
-        case 'mousemove':
+        case EVENT.MOVE:
           this._move(e);
           break;
-        case 'touchend':
-        case 'MSPointerUp':
-        case 'mouseup':
-          this._end(e);
-          break;
-        case 'touchcancel':
-        case 'MSPointerCancel':
-        case 'mousecancel':
+        case EVENT.END:
+        case EVENT.CANCEL:
           this._end(e);
           break;
         case 'orientationchange':
@@ -231,24 +229,10 @@ define(function (require, exports, module) {
     IScroll.prototype.destroy = function () {
       removeEvent(window, 'orientationchange', this);
       removeEvent(window, 'resize', this);
-
-      if (hasTouch) {
-        removeEvent(this.wrapper, 'touchstart', this);
-        removeEvent(window, 'touchmove', this);
-        removeEvent(window, 'touchcancel', this);
-        removeEvent(window, 'touchend', this);
-      } else if (hasPointer) {
-        removeEvent(this.wrapper, 'MSPointerDown', this);
-        removeEvent(window, 'MSPointerMove', this);
-        removeEvent(window, 'MSPointerCancel', this);
-        removeEvent(window, 'MSPointerUp', this);
-      } else {
-        removeEvent(this.wrapper, 'mousedown', this);
-        removeEvent(window, 'mousemove', this);
-        removeEvent(window, 'mousecancel', this);
-        removeEvent(window, 'mouseup', this);
-      }
-
+      removeEvent(this.wrapper, EVENT.START, this);
+      removeEvent(window, EVENT.MOVE, this);
+      removeEvent(window, EVENT.END, this);
+      removeEvent(window, EVENT.CANCEL, this);
       removeEvent(this.scroller, 'transitionend', this);
       removeEvent(this.scroller, 'webkitTransitionEnd', this);
       removeEvent(this.scroller, 'oTransitionEnd', this);
@@ -256,7 +240,7 @@ define(function (require, exports, module) {
     }
 
     IScroll.prototype._translate = function (x, y) {
-      if (this.options.useTransform) {
+      if (hasTransform) {
         this.scrollerStyle[TRANSFORM] = 'translate(' + x + 'px,' + y + 'px)' + TRANSLATE_Z;
       } else {
         x = Math.round(x);
@@ -308,13 +292,13 @@ define(function (require, exports, module) {
 
       this.isAnimating = false;
 
-      if (this.options.momentum) {
-        pos = getComputedPosition(this.scroller, this.options.useTransform);
+      //      if (this.options.momentum) {
+      pos = getComputedPosition(this.scroller);
 
-        if (pos.x != this.x || pos.y != this.y) {
-          this._translate(pos.x, pos.y);
-        }
+      if (pos.x != this.x || pos.y != this.y) {
+        this._translate(pos.x, pos.y);
       }
+      //      }
 
       this.startX = this.x;
       this.startY = this.y;
@@ -323,19 +307,9 @@ define(function (require, exports, module) {
 
       this.startTime = getTime();
 
-      if (hasTouch) {
-        addEvent(window, 'touchmove', this);
-        addEvent(window, 'touchcancel', this);
-        addEvent(window, 'touchend', this);
-      } else if (hasPointer) {
-        addEvent(window, 'MSPointerMove', this);
-        addEvent(window, 'MSPointerCancel', this);
-        addEvent(window, 'MSPointerUp', this);
-      } else {
-        addEvent(window, 'mousemove', this);
-        addEvent(window, 'mousecancel', this);
-        addEvent(window, 'mouseup', this);
-      }
+      addEvent(window, EVENT.MOVE, this);
+      addEvent(window, EVENT.END, this);
+      addEvent(window, EVENT.CANCEL, this);
     };
 
     IScroll.prototype._move = function (e) {
@@ -407,19 +381,9 @@ define(function (require, exports, module) {
         return;
       }
 
-      if (hasTouch) {
-        removeEvent(window, 'touchmove', this);
-        removeEvent(window, 'touchcancel', this);
-        removeEvent(window, 'touchend', this);
-      } else if (hasPointer) {
-        removeEvent(window, 'MSPointerMove', this);
-        removeEvent(window, 'MSPointerCancel', this);
-        removeEvent(window, 'MSPointerUp', this);
-      } else {
-        removeEvent(window, 'mousemove', this);
-        removeEvent(window, 'mousecancel', this);
-        removeEvent(window, 'mouseup', this);
-      }
+      removeEvent(window, EVENT.MOVE, this);
+      removeEvent(window, EVENT.END, this);
+      removeEvent(window, EVENT.CANCEL, this);
 
       var point = e.changedTouches ? e.changedTouches[0] : e,
         momentumX,
@@ -442,7 +406,7 @@ define(function (require, exports, module) {
       }
 
       // start momentum animation if needed
-      if (this.options.momentum && duration < 300) {
+      if (/*this.options.momentum && */duration < 300) {
         momentumX = this.hasHorizontalScroll ? momentum(this.x, this.startX, duration, this.maxScrollX, this.options.overshoot ? this.wrapperWidth : 0) : { destination: newX, duration: 0 };
         momentumY = this.hasVerticalScroll ? momentum(this.y, this.startY, duration, this.maxScrollY, this.options.overshoot ? this.wrapperHeight : 0) : { destination: newY, duration: 0 };
         newX = momentumX.destination;
