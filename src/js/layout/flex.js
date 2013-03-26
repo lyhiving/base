@@ -1,5 +1,8 @@
 define(function (require, exports, module) {
   var $ = require('$');
+  var Scroll = require('../plugin/scroll');
+  var content = $('.content');
+
   //IOS 是否是Web App模式
   var standalone = navigator.standalone;
 
@@ -48,4 +51,6 @@ define(function (require, exports, module) {
       $(fullscreen);
     }
   }
+
+  new Scroll(content.get(0));
 });
