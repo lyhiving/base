@@ -1,5 +1,5 @@
 define(function (require, exports, module) {
-  require('../src/js/layout/flex');
+  require('flex');
   document.getElementById('user-agent').value = navigator.userAgent;
 });
 
