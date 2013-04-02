@@ -20,7 +20,6 @@
   },
   "output": {
     "css/layout/flex.css": ["css/reset/reset.css", "css/layout/flex.css"],
-    "js/detect/base.js": ["js/detect/base.js"],
     "js/detect/ua.js": ["js/detect/ua.js"],
     "js/detect/support.js": ["js/detect/support.js"],
     "js/detect/detect.js": ["js/detect/detect.js"],

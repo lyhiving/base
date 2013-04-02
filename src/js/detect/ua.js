@@ -1,7 +1,8 @@
 define(function (require, exports, module) {
-  var Detect = require('./base');
-  var browser = {};
-  var os = {};
+  var $ = require('$');
+
+  $.browser || ($.browser = {});
+  $.os || ($.os = {});
 
   var navigator = window.navigator,
     ua = navigator.userAgent,
@@ -12,7 +13,8 @@ define(function (require, exports, module) {
     webkit = ua.match(/WebKit\/([\d.]+)/),
     chrome = ua.match(/Chrome\/([\d.]+)/) || ua.match(/CriOS\/([\d.]+)/),
     safari = ua.match(/AppleWebKit.+Version\/([\d.]+)/),
-    ie = ua.match(/IEMobile\/([\d.]+)/);
+    ie = ua.match(/IEMobile\/([\d.]+)/),
+    browser = {}, os = {};
 
   iphone && (os.ios = os.iphone = true, os.version = iphone[1].replace(/_/g, '.'));
   ipad && (os.ios = os.ipad = true, os.version = ipad[1].replace(/_/g, '.'));
@@ -24,8 +26,6 @@ define(function (require, exports, module) {
   chrome && (browser.chrome = true, browser.version = chrome[1]);
   ie && (browser.ie = true, browser.version = ie[1]);
 
-  Detect.browser = browser;
-  Detect.os = os;
-
-  return Detect;
+  $.extend($.browser, browser);
+  $.extend($.os, os);
 });

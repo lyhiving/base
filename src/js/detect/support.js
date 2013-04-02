@@ -1,43 +1,40 @@
 define(function (require, exports, module) {
-  var Detect = require('./base');
-  var support = {};
-  var doc = document;
+  var $ = require('$');
+  $.support || ($.support = {});
 
-  var dummyStyle = doc.createElement('div').style,
+  var dummy = doc.createElement('div'),
+    dummyStyle = dummy.style,
+    vendor = '',
     prefix = (function () {
-      var vendors = ['t', 'webkitT', 'MozT', 'msT'],
-        transform,
-        i = 0,
-        l = vendors.length;
+      var vendors = {'-o-': 'O', '-moz-': 'Moz', '-ms-': 'ms', '-webkit-': 'webkit'}, key;
 
-      for (; i < l; i++) {
-        transform = vendors[i] + 'ransform';
-        if (transform in dummyStyle)
-          return vendors[i].substr(0, vendors[i].length - 1);
+      for (key in vendors) {
+        var v = vendors[key];
+        if ((v + 'Transform') in dummyStyle) {
+          vendor = v;
+          return key;
+        }
       }
 
       return '';
     })(),
     touch = "ontouchend" in doc,
     pointer = navigator.msPointerEnabled,
-    transform = prefixStyle('transform') in dummyStyle,
-    trans3d = prefixStyle('perspective') in dummyStyle,
-    transition = prefixStyle('transition') in dummyStyle;
+    transform = prefixStyle('Transform') in dummyStyle,
+    trans3d = prefixStyle('Perspective') in dummyStyle,
+    transition = prefixStyle('Transition') in dummyStyle;
 
   function prefixStyle(style) {
-    if (prefix === '')
-      return style;
-    return prefix + style.charAt(0).toUpperCase() + style.substr(1);
+    return prefix ? (prefix + style) : style.toLowerCase();
   }
 
-  //support
-  support.prefix = prefix;
-  touch && (support.touch = true);
-  pointer && (support.pointer = true);
-  transform && (support.transform = true);
-  trans3d && (support.trans3d = true);
-  transition && (support.transition = true);
-
-  Detect.support = support;
-  return support;
+  $.extend($.support, {
+    vendor: vendor,
+    prefix: prefix,
+    touch: touch,
+    pointer: pointer,
+    transform: transform,
+    trans3d: trans3d,
+    transition: transition
+  });
 });
