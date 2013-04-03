@@ -1,6 +1,7 @@
 define(function (require, exports, module) {
   var $ = require('$');
   var IScroll = require('../src/js/plugin/iscroll-debug');
+  var History = require('../src/js/url/history.js');
   console.log($.support)
   require('flex');
   $('#user-agent').val(navigator.userAgent);
@@ -26,6 +27,24 @@ define(function (require, exports, module) {
 
   new IScroll('.content', {
     scroller: '.page'
+  });
+
+  History.Adapter.bind(window, 'statechange', function () { // Note: We are using statechange instead of popstate
+    var State = History.getState(); // Note: We are using History.getState() instead of event.state
+    console.info(State.data, State.title, State.url);
+  });
+
+  $('#anchor1').on('click', function () {
+    History.pushState({state: 1, rand: Math.random()}, "State 1", "aaa.html");
+    return false;
+  });
+  $('#anchor2').on('click', function () {
+    History.pushState({state: 2, rand: Math.random()}, "State 2", "bbb.html");
+    return false;
+  });
+  $('#anchor3').on('click', function () {
+    History.back();
+    return false;
   });
 });
 

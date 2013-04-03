@@ -22,8 +22,6 @@
     "css/layout/flex.css": ["css/reset/reset.css", "css/layout/flex.css"],
     "js/detect/ua.js": ["js/detect/ua.js"],
     "js/detect/support.js": ["js/detect/support.js"],
-    "js/detect/detect.js": ["js/detect/detect.js"],
-    "js/layout/flex.js": ["js/layout/flex.js"],
-    "js/plugin/scroll.js": ["js/plugin/scroll.js"]
+    "js/layout/flex.js": ["js/layout/flex.js"]
   }
 }
