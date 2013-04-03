@@ -6,14 +6,14 @@
  */
 define(function (require, exports, module) {
   require('../detect/ua');
+  var $ = require('$');
 
   // ========================================================================
   // Initialise
   var History = {};
   (function (window, undefined) {
     // Localise Globals
-    var $ = require('$'),
-      browser = $.browser,
+    var browser = $.browser,
       document = window.document, // Make sure we are using the correct document
       navigator = window.navigator, // Make sure we are using the correct navigator
       sessionStorage = window.sessionStorage, // sessionStorage

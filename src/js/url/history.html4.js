@@ -20,26 +20,11 @@
 		setInterval = window.setInterval||setInterval,
 		History = window.History = window.History||{}; // Public History Object
 
-	// Check Existence
-	if ( typeof History.initHtml4 !== 'undefined' ) {
-		throw new Error('History.js HTML4 Support has already been loaded...');
-	}
-
-
 	// ========================================================================
 	// Initialise HTML4 Support
 
 	// Initialise HTML4 Support
 	History.initHtml4 = function(){
-		// Initialise
-		if ( typeof History.initHtml4.initialized !== 'undefined' ) {
-			// Already Loaded
-			return false;
-		}
-		else {
-			History.initHtml4.initialized = true;
-		}
-
 
 		// ====================================================================
 		// Properties
