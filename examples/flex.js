@@ -1,10 +1,13 @@
 define(function (require, exports, module) {
   var $ = require('$');
-  var IScroll = require('../src/js/plugin/iscroll-debug');
-  var History = require('../src/js/url/history.js');
-  console.log($.support)
+  var IScroll = require('iscroll');
+  //var History = require('history');
+  var Navigate = require('navigate');
   require('flex');
+
   $('#user-agent').val(navigator.userAgent);
+
+  //zepto touch events
   $('header').on('tap',function (e) {
     console.log('tap', e);
   }).on('singleTap',function (e) {
@@ -25,26 +28,30 @@ define(function (require, exports, module) {
       console.log('swipeRight', e)
     });
 
+  //iscroll
   new IScroll('.content', {
     scroller: '.page'
   });
 
-  History.Adapter.bind(window, 'statechange', function () { // Note: We are using statechange instead of popstate
-    var State = History.getState(); // Note: We are using History.getState() instead of event.state
-    console.info(State.data, State.title, State.url);
+  //jquery navigation widget
+  $(window).on("navigate", function (e, data) {
+    console.log(arguments);
   });
-
-  $('#anchor1').on('click', function () {
-    History.pushState({state: 1, rand: Math.random()}, "State 1", "aaa.html");
-    return false;
+  $('#anchor1').on('click', function (e) {
+    e.preventDefault();
+    Navigate($(this).attr("href"), {
+      foo: '1'
+    });
   });
-  $('#anchor2').on('click', function () {
-    History.pushState({state: 2, rand: Math.random()}, "State 2", "bbb.html");
-    return false;
+  $('#anchor2').on('click', function (e) {
+    e.preventDefault();
+    Navigate($(this).attr("href"), {
+      foo: '2'
+    });
   });
-  $('#anchor3').on('click', function () {
-    History.back();
-    return false;
+  $('#anchor3').on('click', function (e) {
+    e.preventDefault();
+    window.history.back();
   });
 });
 
