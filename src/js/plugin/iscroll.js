@@ -53,7 +53,7 @@ IScroll.utils = (function () {
     el.removeEventListener(type, fn, !!capture);
   }
 
-  function getComputedPosition(el, useTransform) {
+  function getComputedPosition(el/*, useTransform*/) {
     var matrix = getComputedStyle(el, null),
       x, y;
 
@@ -119,12 +119,12 @@ IScroll.utils = (function () {
     scrollY: true,
     lockDirection: true,
     overshoot: true,
-    momentum: true,
+    momentum: true
     //eventPassthrough: false,	TODO: preserve native vertical scroll on horizontal JS scroll (and vice versa)
 
-    HWCompositing: true,		// set to false to skip the hardware compositing
-    useTransition: true,
-    useTransform: true
+    //HWCompositing: true,		// set to false to skip the hardware compositing
+    //useTransition: true,
+    //useTransform: true
   };
 
   var events = {};
@@ -211,9 +211,9 @@ IScroll.prototype.reset = function (options) {
   this.scrollerStyle = this.scroller.style;		// cache style for better performance
 
   // Normalize options
-  if (!this.options.HWCompositing) {
-    utils.style.translateZ = '';
-  }
+  //if (!this.options.HWCompositing) {
+    //utils.style.translateZ = '';
+  //}
 
   // default easing
   if (support.transition) {
@@ -330,12 +330,13 @@ IScroll.prototype._start = function (e) {
   this.distY = 0;
   this.directionLocked = 0;
 
+  this.refresh();
   this._transitionTime();
 
   this.isAnimating = false;
 
   if (this.options.momentum) {
-    pos = IScroll.utils.getComputedPosition(this.scroller, this.options.useTransform);
+    pos = IScroll.utils.getComputedPosition(this.scroller/*, this.options.useTransform*/);
 
     if (pos.x != this.x || pos.y != this.y) {
       this._translate(pos.x, pos.y);
