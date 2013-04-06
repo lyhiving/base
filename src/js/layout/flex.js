@@ -22,7 +22,7 @@ define(function (require, exports, module) {
           } else if (os.android) {
             return function () {
               bodyStyle.minHeight = win.outerHeight / win.devicePixelRatio + 'px';
-              win.scrollTo(0, 1); //Android 2.x 需要scrollTo(0, 1)
+              win.scrollTo(0, os.version < 3 ? 1 : 0); //Android 2.x 需要scrollTo(0, 1)
             }
           }
         } else {
