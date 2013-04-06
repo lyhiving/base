@@ -33,7 +33,7 @@ define(function (require, exports, module) {
       })();
 
       //阻止页面默认滚动效果 wp可以通过css -ms-touch-action:none; 实现
-      if ('ontouchmove' in win) {
+      if ($.support.touch) {
         $(win).on('touchmove', function (e) {
           e.preventDefault();
         });
