@@ -1,6 +1,6 @@
 {
   "name": "base",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "root": "handy",
   "description": "移动Web开发的基础样式和脚本",
   "author": "Denis",
@@ -11,8 +11,22 @@
   "bugs": {
     "url": "https://github.com/handyjs/base/issues"
   },
+<<<<<<< HEAD
   "output": {
     "css/reset.css": ["css/reset.css"],
     "js/detect.js": ["js/detect.js"]
+=======
+  "license": "MIT",
+  "tests": ["base"],
+  "dependencies": {
+    "$": "$",
+    "widget": "arale/widget/1.0.3/widget"
+  },
+  "output": {
+    "css/layout/flex.css": ["css/reset/reset.css", "css/layout/flex.css"],
+    "js/detect/ua.js": ["js/detect/ua.js"],
+    "js/detect/support.js": ["js/detect/support.js"],
+    "js/layout/flex.js": ["js/layout/flex.js"]
+>>>>>>> 1.1.0
   }
 }
