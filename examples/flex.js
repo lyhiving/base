@@ -42,8 +42,8 @@ define(function (require, exports, module) {
   });
   $('#anchor1').on('click', function (e) {
     e.preventDefault();
-    Navigate($(this).attr("href"), {
-      foo: '1'
+    $('.page').animate({
+      translateX: '-100%'
     });
   });
   $('#anchor2').on('click', function (e) {
