@@ -34,6 +34,9 @@ define(function (require, exports, module) {
   });
 
   //jquery navigation widget
+  $(window).on("beforenavigate", function (e) {
+    console.log(arguments);
+  });
   $(window).on("navigate", function (e, data) {
     console.log(arguments);
   });

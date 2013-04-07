@@ -9,7 +9,7 @@
   <!--IE点击出现灰色方块-->
   <meta name="msapplication-tap-highlight" content="no"/>
 
-  <title>Flex Page</title>
+  <title>Path</title>
   <link rel="stylesheet" href="../src/css/reset/reset.css">
   <link rel="stylesheet" href="../src/css/layout/flex.css">
   <style type="text/css">
@@ -90,58 +90,6 @@
 <header><h1>Header</h1></header>
 <section class="content">
   <div class="page" data-role="page">
-    <ul>
-      <li><a id="anchor1" href="#1">List row 1</a></li>
-      <li><textarea id="user-agent"></textarea></li>
-      <li><a id="anchor2" href="page1.html">List row 3</a></li>
-      <li><a id="anchor3" href="#3">List row 4</a></li>
-      <li>List row 5</li>
-      <li>List row 6</li>
-      <li>List row 7</li>
-      <li>List row 8</li>
-      <li>List row 9</li>
-      <li>List row 10</li>
-      <li>List row 11</li>
-      <li>List row 12</li>
-      <li>List row 13</li>
-      <li>List row 14</li>
-      <li>List row 15</li>
-      <li>List row 16</li>
-      <li>List row 17</li>
-      <li>List row 18</li>
-      <li>List row 19</li>
-      <li>List row 20</li>
-      <li>List row 21</li>
-      <li>List row 22</li>
-      <li>List row 23</li>
-      <li>List row 24</li>
-      <li>List row 25</li>
-      <li>List row 26</li>
-      <li>List row 27</li>
-      <li>List row 28</li>
-      <li>List row 29</li>
-      <li>List row 30</li>
-      <li>List row 31</li>
-      <li>List row 32</li>
-      <li>List row 33</li>
-      <li>List row 34</li>
-      <li>List row 35</li>
-      <li>List row 36</li>
-      <li>List row 37</li>
-      <li>List row 38</li>
-      <li>List row 39</li>
-      <li>List row 40</li>
-      <li>List row 41</li>
-      <li>List row 42</li>
-      <li>List row 43</li>
-      <li>List row 44</li>
-      <li>List row 45</li>
-      <li>List row 46</li>
-      <li>List row 47</li>
-      <li>List row 48</li>
-      <li>List row 49</li>
-      <li>List row 50</li>
-    </ul>
   </div>
 </section>
 <footer>Footer</footer>
@@ -150,13 +98,13 @@
   seajs.config({
     alias: {
       '$': 'plugin/jquto',
-      'flex': 'layout/flex',
-      'iscroll': 'plugin/iscroll',
-      'navigate': 'url/navigation.js'
+      'path': 'url/path'
     },
     base: '../src/js/'
   });
-  seajs.use('./flex');
+  seajs.use('path', function(Path){
+    console.log(Path);
+  });
 </script>
 </body>
 </html>
