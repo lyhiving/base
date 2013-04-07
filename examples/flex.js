@@ -42,15 +42,14 @@ define(function (require, exports, module) {
   });
   $('#anchor1').on('click', function (e) {
     e.preventDefault();
-    $('.page').animate({
-      translateX: '-100%'
+    Navigate($(this).attr("href"), {
+      foo: '1'
     });
   });
   $('#anchor2').on('click', function (e) {
     e.preventDefault();
-    Navigate($(this).attr("href"), {
-      foo: '2'
-    });
+    var url = $(this).attr("href");
+
   });
   $('#anchor3').on('click', function (e) {
     e.preventDefault();
