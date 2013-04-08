@@ -1,7 +1,7 @@
 define(function (require, exports, module) {
   var $ = require('$'),
     Base = require('base'),
-    IScroll = require('../plugin/iscroll'),
+    IScroll = require('iscroll'),
     Path = require('./path'),
     Navigate = require('./navigation'),
     $win = $(window),
@@ -9,26 +9,40 @@ define(function (require, exports, module) {
 
   var Page = Base.extend({
     init: function (routers) {
-      var dom = $('.page').eq(0), baseUrl = Path.parseUrl(Path.documentUrl.hrefNoHash), hashUrl = Path.parseUrl(Path.squash(Path.documentUrl.href));
-      this.pages = [
-        {
-          url: baseUrl,
-          dom: dom
-        }
-      ];
-      this.activeIndex = 0;
-
+      this._initPages();
       this._initRouters(routers);
+      this._initEvents();
+
+      this.activeIndex = 0;
       //iscroll
       this.iscroll = new IScroll('.content', {
-        scroller: dom
+        scroller: this.pages[0].dom
       });
 
-      if (baseUrl.hrefNoHash != hashUrl.hrefNoHash) {
+      //页面锚点对应链接
+      var hashUrl = Path.parseUrl(Path.squash(Path.documentUrl.href));
+      if (Path.documentUrl.hrefNoHash != hashUrl.hrefNoHash) {
         this.forward(hashUrl, true);
       }
-
-      this._initEvents();
+    },
+    _initPages: function () {
+      var pages = this.pages = [];
+      $.each($('.page'), function (i, page) {
+        if (i === 0) {
+          pages.push({
+            url: Path.parseUrl(Path.documentUrl.hrefNoHash),
+            dom: $(page)
+          });
+        } else {
+          var url = $(page).data('url');
+          if (url) {
+            pages.push({
+              url: Path.parseUrl(Path.makeUrlAbsolute(url)),
+              dom: $(page)
+            });
+          }
+        }
+      });
     },
     _initRouters: function (urls) {
       var routers = this.routers = [];
