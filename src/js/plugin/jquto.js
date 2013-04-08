@@ -1,4 +1,3 @@
-define(function (require, exports, module) {
 /*!
  * jQuery JavaScript Library v@VERSION
  * http://jquery.com/
@@ -12,7 +11,7 @@ define(function (require, exports, module) {
  *
  * Date: @DATE
  */
-return (function( window, undefined ) {
+(function( window, undefined ) {
 
 // Can't do this because several apps including ASP.NET trace
 // the stack via arguments.caller.callee and Firefox dies if
@@ -6507,6 +6506,8 @@ jQuery.each( { Height: "height", Width: "width" }, function( name, type ) {
   })
 })(jQuery)
 
-return jQuery;
+  define(function(require, exports, module) {
+    module.exports = jQuery;
+  });
+
 })( this );
-});

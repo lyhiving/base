@@ -28,6 +28,10 @@ define(function (require, exports, module) {
       console.log('swipeRight', e)
     });
 
-  Page.init(['flex.html', 'page1.html']);
+  Page.on('load',function () {
+    console.info('load', arguments);
+  }).on('transition',function () {
+      console.info('transition', arguments);
+    }).init(['flex.html', 'page1.html']);
 });
 

@@ -41,8 +41,8 @@ define(function (require, exports, module) {
       var that = this;
       //jquery navigation widget
       $win.on("navigate", function (e, data) {
-        console.log(data.state);
-        var squashUrl = Path.parseUrl(Path.squash(location.href)),
+        var state = data.state,
+          squashUrl = Path.parseUrl(Path.squash(location.href)),
           href = squashUrl.hrefNoHash;
 
         //检测路由列表
@@ -50,28 +50,11 @@ define(function (require, exports, module) {
           return;
         }
 
-        if (that.getIndexByUrl(squashUrl) < 0) {
+        if (state.direction === 'forward' || that.getIndexByUrl(squashUrl) < 0) {
           that.forward(squashUrl);
         } else {
           that.backward(squashUrl);
         }
-
-        //        var state = data.state;
-        //        if (state.url) {
-        //          if (state.direction === 'back') {
-        //            that.backward(state.url);
-        //          } else {
-        //            that.forward(state.url, true);
-        //          }
-        //        } else {
-        //          var baseHref = that.pages[0].url.hrefNoHash,
-        //            locationHref = Path.parseLocation().hrefNoHash;
-        //          if (locationHref == baseHref) {
-        //            page.backward(baseHref);
-        //          } else {
-        //            page.forward(Path.squash(locationHref));
-        //          }
-        //        }
       });
       $(document).on('click', '[data-transition]', function (e) {
         e.preventDefault();
@@ -150,6 +133,7 @@ define(function (require, exports, module) {
             scroller: $(this),
             startY: nextY
           });
+          that.trigger('transition', that.pages[nextIndex]);
         }
       });
       currentDom.animate({
@@ -161,7 +145,7 @@ define(function (require, exports, module) {
         }
       });
       if (Path.documentBase.hrefNoHash === url.href) {
-        Navigate('', null, true);
+        Navigate('#', null, true);
       } else {
         Navigate(url.href, null, true);
       }
@@ -185,6 +169,7 @@ define(function (require, exports, module) {
             url: url,
             dom: dom
           };
+          this.trigger('load', o);
           if (backward) {
             pages.unshift(o);
             this.transition(0, true);
@@ -194,7 +179,7 @@ define(function (require, exports, module) {
           }
         },
         error: function () {
-
+          this.trigger('error', url);
         }
       });
     }
