@@ -1,9 +1,9 @@
 define(function (require, exports, module) {
-  var $ = require('$');
-  var IScroll = require('iscroll');
-  //var History = require('history');
-  var Navigate = require('navigate');
   require('flex');
+  var $ = require('$');
+  //var History = require('history');
+  var Page = require('page');
+  var $win = $(window);
 
   $('#user-agent').val(navigator.userAgent);
 
@@ -28,32 +28,6 @@ define(function (require, exports, module) {
       console.log('swipeRight', e)
     });
 
-  //iscroll
-  new IScroll('.content', {
-    scroller: '.page'
-  });
-
-  //jquery navigation widget
-  $(window).on("beforenavigate", function (e) {
-    console.log(arguments);
-  });
-  $(window).on("navigate", function (e, data) {
-    console.log(arguments);
-  });
-  $('#anchor1').on('click', function (e) {
-    e.preventDefault();
-    Navigate($(this).attr("href"), {
-      foo: '1'
-    });
-  });
-  $('#anchor2').on('click', function (e) {
-    e.preventDefault();
-    var url = $(this).attr("href");
-
-  });
-  $('#anchor3').on('click', function (e) {
-    e.preventDefault();
-    window.history.back();
-  });
+  Page.init(['flex.html', 'page1.html']);
 });
 

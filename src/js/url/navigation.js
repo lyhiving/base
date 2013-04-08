@@ -4,7 +4,7 @@ define(function (require, exports, module) {
   var defaults = {
     // Automatically load and show pages based on location.hash
     hashListeningEnabled: true,
-    pushStateEnabled: true
+    pushStateEnabled: false
   }, $win = $(window), Navigator, navigate;
 
   $.extend($.support, {
@@ -183,7 +183,7 @@ define(function (require, exports, module) {
         } else if (Path.isPath(url)) {
           var resolved = Path.parseUrl(href);
           // If the passed url is a path, make it domain relative and remove any trailing hash
-          hash = resolved.pathname + resolved.search + (Path.isPreservableHash(resolved.hash) ? resolved.hash.replace("#", "") : "");
+          hash = resolved.pathname + resolved.search/* + (Path.isPreservableHash(resolved.hash) ? resolved.hash.replace("#", "") : "")*/;
         } else {
           hash = url;
         }

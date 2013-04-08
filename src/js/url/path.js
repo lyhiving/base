@@ -312,11 +312,11 @@ define(function (require, exports, module) {
        }*/
 
       return href;
-    },
-
-    isPreservableHash: function (hash) {
-      return hash.replace("#", "").indexOf(this.uiStateKey) === 0;
     }
+
+    //isPreservableHash: function (hash) {
+    //  return hash.replace("#", "").indexOf(this.uiStateKey) === 0;
+    //}
   };
 
   Path.documentUrl = Path.parseLocation();
