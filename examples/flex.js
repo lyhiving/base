@@ -26,6 +26,6 @@ define(function (require, exports, module) {
       console.log('swipeRight', e)
     });
 
-  Page.init(['flex.html', 'page1.html']);
+  Page.init();
 });
 
