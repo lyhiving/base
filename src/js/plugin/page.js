@@ -89,14 +89,18 @@ define(function (require, exports, module) {
       }
     },
     backward: function (href, data, post) {
-      var url = $.type(href) === 'object' ? href : Path.parseUrl(Path.squash(Path.makeUrlAbsolute(href))), i;
-      //添加到路由列表
-      this.addRouter(url.hrefNoHash);
+      if (href) {
+        var url = $.type(href) === 'object' ? href : Path.parseUrl(Path.squash(Path.makeUrlAbsolute(href))), i;
+        //添加到路由列表
+        this.addRouter(url.hrefNoHash);
 
-      if ((i = this.getIndexByUrl(url)) < 0) {
-        this._createPage({url: url, data: data, post: post}, false);
+        if ((i = this.getIndexByUrl(url)) < 0) {
+          this._createPage({url: url, data: data, post: post}, false);
+        } else {
+          this.transition(this.pages[i], true);
+        }
       } else {
-        this.transition(this.pages[i], true);
+        window.history.back();
       }
     },
     addRouter: function (url) {
