@@ -1,5 +1,5 @@
 define(function (require, exports, module) {
-  require('flex');
+  //require('flex');
   var $ = require('$');
   var Page = require('page');
 
@@ -26,6 +26,8 @@ define(function (require, exports, module) {
       console.log('swipeRight', e)
     });
 
-  Page.init();
+  Page.init({
+    iscroll: true
+  });
 });
 

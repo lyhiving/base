@@ -8,17 +8,14 @@ define(function (require, exports, module) {
     page;
 
   var Page = Base.extend({
-    init: function (routers) {
+    init: function (options) {
+      options || (options = {});
       this.routers = [];
       this._initPages();
-      //this._initRouters(routers);
       this._initEvents();
-      this.addRouter(Path.documentBase.hrefNoHash);
 
-      //iscroll
-      this.iscroll = new IScroll('.content', {
-        scroller: this.pages[0].dom
-      });
+      options.iscroll && this._initIScroll();
+      this.addRouter(Path.documentBase.hrefNoHash);
 
       //页面锚点对应链接
       var hashUrl = Path.parseUrl(Path.squash(Path.documentUrl.href));
@@ -45,6 +42,12 @@ define(function (require, exports, module) {
         }
       });
       this.activePage = this.pages[0];
+    },
+    _initIScroll: function () {
+      //iscroll
+      this.iscroll = new IScroll('.content', {
+        scroller: this.pages[0].dom
+      });
     },
     _initEvents: function () {
       var that = this;
@@ -141,7 +144,7 @@ define(function (require, exports, module) {
         duration: 250,
         complete: function () {
           that.activePage = nextPage;
-          that.iscroll.reset({
+          that.iscroll && that.iscroll.reset({
             scroller: $(this),
             startY: nextY
           });

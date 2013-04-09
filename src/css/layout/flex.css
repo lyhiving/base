@@ -24,9 +24,4 @@ body {
   position:relative;
   overflow:hidden;
   /*-webkit-touch-callout:none; 点击链接呼出扩展操作*/
-  -webkit-text-size-adjust:none; /*使Chrome使用小于12px的字体，但是双指放大网页，字体不会对应放大*/
-  -moz-text-size-adjust:none;
-  -ms-text-size-adjust:none;
-  -o-text-size-adjust:none;
-  text-size-adjust:none;
 }
