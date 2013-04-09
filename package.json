@@ -12,18 +12,17 @@
     "url": "https://github.com/handyjs/base/issues"
   },
   "spm": {
-    "source": "src",
-    "output": {
-      "css/reset/reset.css": ["css/reset/reset.css"],
-      "css/layout/flex.css": ["css/layout/flex.css"],
-      "js/detect/ua.js": ["js/detect/ua.js"],
-      "js/layout/flex.js": ["js/layout/flex.js"],
-      "js/plugin/page.js": ["js/plugin/page.js"]
-    },
+    "output": [
+      "css/reset/reset.css",
+      "css/layout/flex.css",
+      "js/detect/ua.js",
+      "js/layout/flex.js",
+      "js/plugin/page.js"
+    ],
     "alias": {
-      '$': 'handy/jquto/1.0.0/jquto',
-      'base': 'arale/base/1.0.1/base',
-      'iscroll': 'handy/iscroll/1.0.0/iscroll'
+      "$": "handy/jquto/1.0.0/jquto",
+      "base": "arale/base/1.0.1/base",
+      "iscroll": "handy/iscroll/1.0.0/iscroll"
     }
   }
 }
