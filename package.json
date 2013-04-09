@@ -16,10 +16,9 @@
     "output": {
       "css/reset/reset.css": ["css/reset/reset.css"],
       "css/layout/flex.css": ["css/layout/flex.css"],
-      "js/detect/support.js": ["js/detect/support.js"],
       "js/detect/ua.js": ["js/detect/ua.js"],
       "js/layout/flex.js": ["js/layout/flex.js"],
-      "js/url/page.js": ["js/url/page.js"]
+      "js/plugin/page.js": ["js/plugin/page.js"]
     },
     "alias": {
       '$': 'handy/jquto/1.0.0/jquto',

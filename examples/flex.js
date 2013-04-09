@@ -1,9 +1,7 @@
 define(function (require, exports, module) {
   require('flex');
   var $ = require('$');
-  //var History = require('history');
   var Page = require('page');
-  var $win = $(window);
 
   $('#user-agent').val(navigator.userAgent);
 
@@ -28,10 +26,6 @@ define(function (require, exports, module) {
       console.log('swipeRight', e)
     });
 
-  Page.on('load',function () {
-    console.info('load', arguments);
-  }).on('transition',function () {
-      console.info('transition', arguments);
-    }).init(['flex.html', 'page1.html']);
+  Page.init(['flex.html', 'page1.html']);
 });
 
