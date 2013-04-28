@@ -15,7 +15,6 @@
     "output": [
       "css/reset/reset.css",
       "css/layout/flex.css",
-      "js/detect/ua.js",
       "js/layout/flex.js",
       "js/plugin/page.js"
     ],
