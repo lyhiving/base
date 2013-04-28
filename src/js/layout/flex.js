@@ -1,11 +1,10 @@
 define(function (require, exports, module) {
-  require('../detect/ua');
-
   var $ = require('$');
+  var Detect = require('detect');
 
   //IOS 是否是Web App模式
   if (!navigator.standalone) {
-    var os = $.os, browser = $.browser, support = $.support;
+    var os = $.os, browser = Detect.browser, support = $.support;
 
     if (!os.wp) {
       var win = window, doc = document;

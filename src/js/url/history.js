@@ -1,5 +1,5 @@
 define(function (require, exports, module) {
-  var $ = require('$'), undefined = undefined;
+  var $ = require('$'), undefined = window.undefined;
 
   function History(stack, index) {
     this.stack = stack || [];
