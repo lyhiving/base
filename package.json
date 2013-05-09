@@ -1,7 +1,7 @@
 {
   "name": "base",
   "version": "1.0.0",
-  "root": "handy",
+  "family": "handy",
   "description": "移动Web开发的基础样式和脚本",
   "author": "Denis",
   "repository": {
@@ -11,8 +11,10 @@
   "bugs": {
     "url": "https://github.com/handyjs/base/issues"
   },
-  "output": {
-    "css/reset.css": ["css/reset.css"],
-    "js/detect.js": ["js/detect.js"]
+  "spm": {
+    "output": [
+      "css/reset.css",
+      "js/detect.js"
+    ]
   }
 }
