@@ -71,7 +71,7 @@ define(function (require, exports, module) {
         if ((i = this._getIndexByUrl(url)) < 0) {
           this._createPage({url: url, data: data, post: post});
         } else {
-          this.transition(this.pages[i], false);
+          this.transition(this.pages[i]);
         }
       }
     },
@@ -86,7 +86,7 @@ define(function (require, exports, module) {
         var url = $.type(href) === 'object' ? href : Path.parseUrl(Path.squash(Path.makeUrlAbsolute(href))), i;
 
         if ((i = this._getIndexByUrl(url)) < 0) {
-          this._createPage({url: url, data: data, post: post}, false);
+          this._createPage({url: url, data: data, post: post}, true);
         } else {
           this.transition(this.pages[i], true);
         }

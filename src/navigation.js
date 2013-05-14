@@ -40,6 +40,7 @@ define(function (require, exports, module) {
         return;
       } else {
         History.add(newHref);
+        isInit = true;
       }
     } else {
       //原页面对应的History索引，这个是肯定能找到的
