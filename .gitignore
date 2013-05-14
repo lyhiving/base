@@ -20,4 +20,3 @@ build
 node_modules
 _site
 sea-modules
-/dist

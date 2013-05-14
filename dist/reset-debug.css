@@ -1,4 +1,15 @@
-/*! define handy/base/1.0.0/css/reset-debug.css */
+/*! define handy/base/1.1.0/reset-debug.css */
+* {
+  -webkit-box-sizing:border-box;
+  -moz-box-sizing:border-box;
+  box-sizing:border-box;
+  -webkit-text-size-adjust:none; /*使Chrome使用小于12px的字体，但是双指放大网页，字体不会对应放大*/
+  -moz-text-size-adjust:none;
+  -ms-text-size-adjust:none;
+  -o-text-size-adjust:none;
+  text-size-adjust:none;
+}
+
 body, div, dl, dt, dd, ul, ol, li, h1, h2, h3,
 h4, h5, h6, pre, code, form, fieldset, legend,
 input, textarea, p, blockquote, th, td {
@@ -16,9 +27,13 @@ fieldset, img {
 }
 
 address, caption, cite, code,
-dfn, em, strong, th, var {
+dfn, em, th, var {
   font-style:normal;
   font-weight:normal;
+}
+
+strong, b {
+  font-weight:700;
 }
 
 li {
