@@ -1,29 +1,22 @@
 define(function (require, exports, module) {
   var $ = require('$');
-  var Detect = require('detect');
+  var Detector = require('detector');
 
   //IOS 是否是Web App模式
   if (!navigator.standalone) {
-    var os = $.os, browser = Detect.browser, support = $.support;
+    var device = Detector.device, browser = Detector.browser, support = $.support;
 
-    if (!os.wp) {
+    if (!device.wp) {
       var win = window, doc = document;
 
       var bodyStyle = doc.body.style;
       var orientationevent = 'onorientationchange' in win ? 'orientationchange' : 'resize';
       var fullscreen = (function () {
-        if (browser.safari && os.iphone) {
-          //if (os.iphone) {
+        if (browser.safari && device.iphone) {
           return function () {
             bodyStyle.minHeight = doc.documentElement.clientHeight + 60 + 'px';
             win.scrollTo(0, 0);
           }
-          /*}  else if (os.android) {
-           return function () {
-           bodyStyle.minHeight = win.outerHeight / win.devicePixelRatio + 'px';
-           win.scrollTo(0, os.version.charAt(0) < 3 ? 1 : 0); //Android 2.x 需要scrollTo(0, 1)
-           }
-           }*/
         } else {
           return function () {
             win.scrollTo(0, 0);

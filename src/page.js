@@ -1,30 +1,20 @@
 define(function (require, exports, module) {
   var $ = require('$'),
     Base = require('base'),
-    IScroll = require('iscroll'),
-    Path = require('../url/path'),
-    Navigate = require('../url/navigation'),
+    Path = require('./path'),
+    Navigation = require('./navigation'),
     $win = $(window),
     page;
 
   var Page = Base.extend({
-    init: function (options) {
-      options || (options = {});
-      this.routers = [];
+    init: function () {
       this._initPages();
       this._initEvents();
-
-      options.iscroll && this._initIScroll();
-      this.addRouter(Path.documentBase.hrefNoHash);
-
-      //页面锚点对应链接
-      var hashUrl = Path.parseUrl(Path.squash(Path.documentUrl.href));
-      if (Path.documentUrl.hrefNoHash != hashUrl.hrefNoHash) {
-        this.forward(hashUrl, true);
-      }
     },
     _initPages: function () {
+
       var pages = this.pages = [];
+      //遍历所有.page，缓存
       $.each($('.page'), function (i, page) {
         if (i === 0) {
           pages.push({
@@ -43,12 +33,6 @@ define(function (require, exports, module) {
       });
       this.activePage = this.pages[0];
     },
-    _initIScroll: function () {
-      //iscroll
-      this.iscroll = new IScroll('.content', {
-        scroller: this.pages[0].dom
-      });
-    },
     _initEvents: function () {
       var that = this;
       //jquery navigation widget
@@ -57,12 +41,7 @@ define(function (require, exports, module) {
           squashUrl = Path.parseUrl(Path.squash(location.href)),
           href = squashUrl.hrefNoHash;
 
-        //检测路由列表
-        if (that.routers.indexOf(href) < 0 || that.activePage.url.hrefNoHash === href) {
-          return;
-        }
-
-        if (state.direction === 'forward' || that.getIndexByUrl(squashUrl) < 0) {
+        if (state.direction === 'forward') {
           that.forward(squashUrl);
         } else {
           that.backward(squashUrl);
@@ -74,27 +53,39 @@ define(function (require, exports, module) {
       });
       $(document).on('click', '[data-rel=back]', function (e) {
         e.preventDefault();
-        that.backward(this.href);
+        window.history.back();
       });
+      //页面载入触发一次hashchange，跳转到hash对应的页面。
+      $win.trigger('hashchange');
     },
+    /**
+     * 前进
+     * @param href
+     * @param data
+     * @param post
+     */
     forward: function (href, data, post) {
-      var url = $.type(href) === 'object' ? href : Path.parseUrl(Path.squash(Path.makeUrlAbsolute(href))), i;
-      //添加到路由列表
-      this.addRouter(url.hrefNoHash);
+      if (href) {
+        var url = $.type(href) === 'object' ? href : Path.parseUrl(Path.squash(Path.makeUrlAbsolute(href))), i;
 
-      if ((i = this.getIndexByUrl(url)) < 0) {
-        this._createPage({url: url, data: data, post: post});
-      } else {
-        this.transition(this.pages[i], false);
+        if ((i = this._getIndexByUrl(url)) < 0) {
+          this._createPage({url: url, data: data, post: post});
+        } else {
+          this.transition(this.pages[i], false);
+        }
       }
     },
+    /**
+     * 后退
+     * @param href
+     * @param data
+     * @param post
+     */
     backward: function (href, data, post) {
       if (href) {
         var url = $.type(href) === 'object' ? href : Path.parseUrl(Path.squash(Path.makeUrlAbsolute(href))), i;
-        //添加到路由列表
-        this.addRouter(url.hrefNoHash);
 
-        if ((i = this.getIndexByUrl(url)) < 0) {
+        if ((i = this._getIndexByUrl(url)) < 0) {
           this._createPage({url: url, data: data, post: post}, false);
         } else {
           this.transition(this.pages[i], true);
@@ -103,21 +94,11 @@ define(function (require, exports, module) {
         window.history.back();
       }
     },
-    addRouter: function (url) {
-      var routers = this.routers;
-      url = Path.makeUrlAbsolute(url);
-      if (routers.indexOf(url) < 0) {
-        routers.push(url);
-      }
-    },
-    getIndexByUrl: function (url) {
-      var pages = this.pages, i = 0, len = pages.length;
-      for (; i < len; i++) {
-        if (url.hrefNoHash === pages[i].url.hrefNoHash)
-          return i;
-      }
-      return -1;
-    },
+    /**
+     * 转场动画函数
+     * @param nextPage
+     * @param backward
+     */
     transition: function (nextPage, backward) {
       if (nextPage === this.activePage)
         return;
@@ -129,6 +110,7 @@ define(function (require, exports, module) {
         currentDom = currentPage.dom,
         currentUrl = currentPage.url;
 
+      that.trigger('transiting');
       nextDom.css('display', 'block');
       var nextMatrix = nextDom.css('transform').split(')')[0].split(', '),
         nextY = 0,
@@ -148,10 +130,7 @@ define(function (require, exports, module) {
         duration: 250,
         complete: function () {
           that.activePage = nextPage;
-          that.iscroll && that.iscroll.reset({
-            scroller: $(this),
-            startY: nextY
-          });
+          $(this).css('transform', '');
           that.trigger('transition', nextPage);
         }
       });
@@ -161,21 +140,37 @@ define(function (require, exports, module) {
         duration: 250,
         complete: function () {
           if (currentDom.data('cache') === false) {
-            that.pages.splice(that.getIndexByUrl(currentUrl), 1);
+            that.pages.splice(that._getIndexByUrl(currentUrl), 1);
             $(this).remove();
           } else {
-            $(this).hide();
+            $(this).hide().css('transform', '');
           }
         }
       });
-      if (Path.documentBase.hrefNoHash === url.href) {
-        Navigate('#', null, true);
-      } else {
-        Navigate(url.href, null, true);
-      }
-
+      Navigation.go(url, backward);
     },
+    /**
+     * 获取page的Index
+     * @param url
+     * @returns {number}
+     * @private
+     */
+    _getIndexByUrl: function (url) {
+      var pages = this.pages, i = 0, len = pages.length;
+      for (; i < len; i++) {
+        if (url.hrefNoHash === pages[i].url.hrefNoHash)
+          return i;
+      }
+      return -1;
+    },
+    /**
+     * 异步页面载入
+     * @param o
+     * @param backward
+     * @private
+     */
     _createPage: function (o, backward) {
+      this.trigger('loading');
       $.ajax(o.url.href, {
         type: o.post ? 'post' : 'get',
         data: o.data,

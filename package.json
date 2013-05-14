@@ -2,7 +2,6 @@
   "family": "handy",
   "name": "base",
   "version": "1.0.0",
-  "family": "handy",
   "description": "移动Web开发的基础样式和脚本",
   "author": "Denis",
   "repository": {
@@ -14,8 +13,15 @@
   },
   "spm": {
     "output": [
-      "css/reset.css",
-      "js/detect.js"
-    ]
+      "reset.css",
+      "flex.css",
+      "flex.js",
+      "page.js"
+    ],
+    "alias": {
+      "$": "$",
+      "base": "arale/base/1.0.1/base",
+      "detector": "arale/detector/1.0.1/detector"
+    }
   }
 }

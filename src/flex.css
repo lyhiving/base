@@ -23,5 +23,5 @@ body {
   -moz-box-flex:1;
   position:relative;
   overflow:hidden;
-  /*-webkit-touch-callout:none; 点击链接呼出扩展操作*/
+  -webkit-touch-callout:none;
 }

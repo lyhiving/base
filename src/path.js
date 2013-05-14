@@ -3,8 +3,6 @@ define(function (require, exports, module) {
   var $base = $("head").find("base")
 
   var Path = {
-    //uiStateKey: "&ui-state",
-
     // This scary looking regular expression parses an absolute URL or its relative
     // variants (protocol, site, document, query, and hash), into the various
     // components (protocol, host, path, query, fragment, etc that make up the
@@ -167,22 +165,6 @@ define(function (require, exports, module) {
       return u.hrefNoSearch + s + ( s.charAt(s.length - 1) !== "?" ? "&" : "" ) + p + ( u.hash || "" );
     },
 
-    convertUrlToDataUrl: function (absUrl) {
-      var u = Path.parseUrl(absUrl);
-      if (Path.isEmbeddedPage(u)) {
-        // For embedded pages, remove the dialog hash key as in getFilePath(),
-        // and remove otherwise the Data Url won't match the id of the embedded Page.
-        return u.hash
-          //.split(dialogHashKey)[0]
-          .replace(/^#/, "")
-          .replace(/\?.*$/, "");
-      } else if (Path.isSameDomain(u, this.documentBase)) {
-        return u.hrefNoHash.replace(this.documentBase.domain, "");//.split(dialogHashKey)[0];
-      }
-
-      return window.decodeURIComponent(absUrl);
-    },
-
     //get path from current hash, or from a file path
     get: function (newPath) {
       if (newPath === undefined) {
@@ -236,20 +218,6 @@ define(function (require, exports, module) {
       return ( /^(:?\w+:)/ ).test(url);
     },
 
-    isEmbeddedPage: function (url) {
-      var u = Path.parseUrl(url);
-
-      //if the path is absolute, then we need to compare the url against
-      //both the this.documentUrl and the documentBase. The main reason for this
-      //is that links embedded within external documents will refer to the
-      //application document, whereas links embedded within the application
-      //document will be resolved against the document base.
-      if (u.protocol !== "") {
-        return ( !this.isPath(u.hash) && u.hash && ( u.hrefNoHash === this.documentUrl.hrefNoHash || ( this.documentBaseDiffers && u.hrefNoHash === this.documentBase.hrefNoHash ) ) );
-      }
-      return ( /^#/ ).test(u.href);
-    },
-
     squash: function (url, resolutionUrl) {
       var state, href, cleanedUrl, search/*, stateIndex*/,
         isPath = this.isPath(url),
@@ -269,15 +237,6 @@ define(function (require, exports, module) {
       // if it is, strip the #, and use it otherwise continue without change
       cleanedUrl = Path.isPath(uri.hash) ? Path.stripHash(uri.hash) : cleanedUrl;
 
-      // Split the UI State keys off the href
-      //stateIndex = cleanedUrl.indexOf(this.uiStateKey);
-
-      // store the ui state keys for use
-      //if (stateIndex > -1) {
-      //uiState = cleanedUrl.slice(stateIndex);
-      //cleanedUrl = cleanedUrl.slice(0, stateIndex);
-      //}
-
       // make the cleanedUrl absolute relative to the resolution url
       href = Path.makeUrlAbsolute(cleanedUrl, resolutionUrl);
 
@@ -292,12 +251,6 @@ define(function (require, exports, module) {
           preservedHash = "";
         }
 
-        // Append the UI State keys where it exists and it's been removed
-        // from the url
-        //if (uiState && preservedHash.indexOf(this.uiStateKey) === -1) {
-        //preservedHash += uiState;
-        //}
-
         // make sure that pound is on the front of the hash
         if (preservedHash.indexOf("#") === -1 && preservedHash !== "") {
           preservedHash = "#" + preservedHash;
@@ -307,16 +260,9 @@ define(function (require, exports, module) {
         href = Path.parseUrl(href);
         href = href.protocol + "//" + href.host + href.pathname + search + preservedHash;
       }
-      /*else {
-       href += href.indexOf("#") > -1 ? uiState : "#" + uiState;
-       }*/
 
       return href;
     }
-
-    //isPreservableHash: function (hash) {
-    //  return hash.replace("#", "").indexOf(this.uiStateKey) === 0;
-    //}
   };
 
   Path.documentUrl = Path.parseLocation();
