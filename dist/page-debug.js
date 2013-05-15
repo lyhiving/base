@@ -55,7 +55,8 @@ define("handy/base/1.1.0/page-debug", [ "$-debug", "arale/base/1.0.1/base-debug"
      * @param post
      */
         forward: function(href, data, post) {
-            if (href) {
+            if (href && !this.transiting) {
+                this.transiting = true;
                 var url = $.type(href) === "object" ? href : Path.parseUrl(Path.squash(Path.makeUrlAbsolute(href))), i;
                 if ((i = this._getIndexByUrl(url)) < 0) {
                     this._createPage({
@@ -75,7 +76,8 @@ define("handy/base/1.1.0/page-debug", [ "$-debug", "arale/base/1.0.1/base-debug"
      * @param post
      */
         backward: function(href, data, post) {
-            if (href) {
+            if (href && !this.transiting) {
+                this.transiting = true;
                 var url = $.type(href) === "object" ? href : Path.parseUrl(Path.squash(Path.makeUrlAbsolute(href))), i;
                 if ((i = this._getIndexByUrl(url)) < 0) {
                     this._createPage({
@@ -116,6 +118,7 @@ define("handy/base/1.1.0/page-debug", [ "$-debug", "arale/base/1.0.1/base-debug"
                     that.activePage = nextPage;
                     $(this).css("transform", "");
                     that.trigger("transition", nextPage);
+                    this.transiting = false;
                 }
             });
             currentDom.animate({
@@ -129,7 +132,6 @@ define("handy/base/1.1.0/page-debug", [ "$-debug", "arale/base/1.0.1/base-debug"
                     } else {
                         $(this).hide().css("transform", "");
                     }
-                    window.scrollTo(0, 0);
                 }
             });
             Navigation.go(url, backward);
@@ -184,6 +186,7 @@ define("handy/base/1.1.0/page-debug", [ "$-debug", "arale/base/1.0.1/base-debug"
                 },
                 error: function() {
                     this.trigger("error", o);
+                    this.transiting = false;
                 }
             });
         }
