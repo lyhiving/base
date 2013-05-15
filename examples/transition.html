@@ -53,12 +53,36 @@
       top:0;
       left:0;
       width:100%;
+      height:100%;
       -webkit-tap-highlight-color:rgba(0, 0, 0, 0);
       -webkit-transform:translateZ(0);
       -moz-transform:translateZ(0);
       -ms-transform:translateZ(0);
       -o-transform:translateZ(0);
       transform:translateZ(0);
+    }
+
+    .iscroller {
+      position:absolute;
+      z-index:1;
+      -webkit-tap-highlight-color:rgba(0, 0, 0, 0);
+      width:100%;
+      height:100%;
+      -webkit-transform:translateZ(0);
+      -moz-transform:translateZ(0);
+      -ms-transform:translateZ(0);
+      -o-transform:translateZ(0);
+      transform:translateZ(0);
+      -webkit-touch-callout:none;
+      -webkit-user-select:none;
+      -moz-user-select:none;
+      -ms-user-select:none;
+      user-select:none;
+      -webkit-text-size-adjust:none;
+      -moz-text-size-adjust:none;
+      -ms-text-size-adjust:none;
+      -o-text-size-adjust:none;
+      text-size-adjust:none;
     }
 
     .page ul {
@@ -90,63 +114,52 @@
 <header><h1>Header</h1></header>
 <section class="content">
   <div class="page" data-role="page">
-    <ul>
-      <li><a href="#1">List row 1</a></li>
-      <li><textarea id="user-agent"></textarea></li>
-      <li><a data-transition="true" href="page1.html">Dom异步载入</a></li>
-      <li><a href="#" data-rel="back">后退</a></li>
-      <li>List row 4</li>
-      <li>List row 5</li>
-      <li>List row 6</li>
-      <li>List row 7</li>
-      <li>List row 8</li>
-      <li>List row 9</li>
-      <li>List row 10</li>
-      <li>List row 11</li>
-      <li>List row 12</li>
-      <li>List row 13</li>
-      <li>List row 14</li>
-      <li>List row 15</li>
-      <li>List row 16</li>
-      <li>List row 17</li>
-      <li>List row 18</li>
-      <li>List row 19</li>
-      <li>List row 20</li>
-      <li>List row 21</li>
-      <li>List row 22</li>
-      <li>List row 23</li>
-      <li>List row 24</li>
-      <li>List row 25</li>
-      <li>List row 26</li>
-      <li>List row 27</li>
-      <li>List row 28</li>
-      <li>List row 29</li>
-      <li>List row 30</li>
-    </ul>
+    <div class="iscroller">
+      <ul>
+        <li><a href="#1">List row 1</a></li>
+        <li><textarea id="user-agent"></textarea></li>
+        <li><a data-transition="true" href="page1.html">Dom异步载入</a></li>
+        <li><a href="#" data-rel="back">后退</a></li>
+        <li>List row 4</li>
+        <li>List row 5</li>
+        <li>List row 6</li>
+        <li>List row 7</li>
+        <li>List row 8</li>
+        <li>List row 9</li>
+        <li>List row 10</li>
+        <li>List row 11</li>
+        <li>List row 12</li>
+        <li>List row 13</li>
+        <li>List row 14</li>
+        <li>List row 15</li>
+        <li>List row 16</li>
+        <li>List row 17</li>
+        <li>List row 18</li>
+        <li>List row 19</li>
+        <li>List row 20</li>
+        <li>List row 21</li>
+        <li>List row 22</li>
+        <li>List row 23</li>
+        <li>List row 24</li>
+        <li>List row 25</li>
+        <li>List row 26</li>
+        <li>List row 27</li>
+        <li>List row 28</li>
+        <li>List row 29</li>
+        <li>List row 30</li>
+      </ul>
+    </div>
   </div>
   <div class="page" data-role="page" data-url="page2.html" style="display:none">
-    <ul>
-      <li><a href="#" data-rel="back">后退</a></li>
-      <li>我就隐藏在页面上</li>
-      <li>List row 33</li>
-      <li>List row 34</li>
-      <li>List row 35</li>
-      <li>List row 36</li>
-      <li>List row 37</li>
-      <li>List row 38</li>
-      <li>List row 39</li>
-      <li>List row 40</li>
-      <li>List row 41</li>
-      <li>List row 42</li>
-      <li>List row 43</li>
-      <li>List row 44</li>
-      <li>List row 45</li>
-      <li>List row 46</li>
-      <li>List row 47</li>
-      <li>List row 48</li>
-      <li>List row 49</li>
-      <li>List row 50</li>
-    </ul>
+    <div class="iscroller">
+      <ul>
+        <li><a href="#" data-rel="back">后退</a></li>
+        <li>我就隐藏在页面上</li>
+        <li>List row 33</li>
+        <li>List row 34</li>
+        <li>List row 35</li>
+      </ul>
+    </div>
   </div>
 </section>
 <footer>Footer</footer>
@@ -158,11 +171,19 @@
       '$': 'handy/jquto/1.0.0/jquto',
       'base': 'arale/base/1.0.1/base',
       'flex': 'handy/base/1.1.0/flex',
-      'page': 'handy/base/1.1.0/page'
+      'page': 'handy/base/1.1.0/page',
+      'iscroll': 'handy/iscroll/5.0.0/iscroll'
     }
   });
-  seajs.use(['$', 'flex', '../src/page'], function ($, Flex, Page) {
+  seajs.use(['$', 'flex', 'iscroll', 'page'], function ($, Flex, IScroll, Page) {
+    Page.on('load', function (page) {
+      new IScroll($('.iscroller', page.dom).get(0));
+    });
     Page.init();
+
+    $('.iscroller').each(function (i, scroller) {
+      new IScroll(scroller);
+    });
   });
 </script>
 </body>
