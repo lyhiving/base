@@ -47,14 +47,14 @@ define(function (require, exports, module) {
           that.backward(squashUrl);
         }
       });
-      $(document).on('tap', '[data-transition]',function (e) {
+      $(document).on('click', '[data-transition]',function (e) {
         e.preventDefault();
         that.forward(this.href);
-      }).on('click', '[data-transition]', false);
-      $(document).on('tap', '[data-rel=back]',function (e) {
+      });
+      $(document).on('click', '[data-rel=back]',function (e) {
         e.preventDefault();
         window.history.back();
-      }).on('click', '[data-transition]', false);
+      });
       //页面载入触发一次hashchange，跳转到hash对应的页面。
       $win.trigger('hashchange');
     },
