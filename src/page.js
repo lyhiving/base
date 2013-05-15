@@ -47,11 +47,11 @@ define(function (require, exports, module) {
           that.backward(squashUrl);
         }
       });
-      $(document).on('click', '[data-transition]', function (e) {
+      $(document).on('touchend', '[data-transition]', function (e) {
         e.preventDefault();
         that.forward(this.href);
       });
-      $(document).on('click', '[data-rel=back]', function (e) {
+      $(document).on('touchend', '[data-rel=back]', function (e) {
         e.preventDefault();
         window.history.back();
       });

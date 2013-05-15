@@ -37,11 +37,11 @@ define("handy/base/1.1.0/page-debug", [ "$-debug", "arale/base/1.0.1/base-debug"
                     that.backward(squashUrl);
                 }
             });
-            $(document).on("click", "[data-transition]", function(e) {
+            $(document).on("touchend", "[data-transition]", function(e) {
                 e.preventDefault();
                 that.forward(this.href);
             });
-            $(document).on("click", "[data-rel=back]", function(e) {
+            $(document).on("touchend", "[data-rel=back]", function(e) {
                 e.preventDefault();
                 window.history.back();
             });
@@ -64,7 +64,7 @@ define("handy/base/1.1.0/page-debug", [ "$-debug", "arale/base/1.0.1/base-debug"
                         post: post
                     });
                 } else {
-                    this.transition(this.pages[i], false);
+                    this.transition(this.pages[i]);
                 }
             }
         },
@@ -82,7 +82,7 @@ define("handy/base/1.1.0/page-debug", [ "$-debug", "arale/base/1.0.1/base-debug"
                         url: url,
                         data: data,
                         post: post
-                    }, false);
+                    }, true);
                 } else {
                     this.transition(this.pages[i], true);
                 }
@@ -453,6 +453,7 @@ define("handy/base/1.1.0/navigation-debug", [ "$-debug", "handy/base/1.1.0/path-
                 return;
             } else {
                 History.add(newHref);
+                isInit = true;
             }
         } else {
             //原页面对应的History索引，这个是肯定能找到的
