@@ -116,11 +116,10 @@
   <div class="page" data-role="page">
     <div class="iscroller">
       <ul>
-        <li><a href="#1">List row 1</a></li>
-        <li><textarea id="user-agent"></textarea></li>
+        <li id="ua"></li>
+        <li><a href="#1">Anchor</a></li>
         <li><a data-transition="true" href="page1.html">Dom异步载入</a></li>
         <li><a href="#" data-rel="back">后退</a></li>
-        <li>List row 4</li>
         <li>List row 5</li>
         <li>List row 6</li>
         <li>List row 7</li>
@@ -170,6 +169,7 @@
     alias: {
       '$': 'handy/jquto/1.0.0/jquto',
       'base': 'arale/base/1.0.1/base',
+      'detector': 'arale/detecotr/1.0.1/detector',
       'flex': 'handy/base/1.1.0/flex',
       'page': 'handy/base/1.1.0/page',
       'iscroll': 'handy/iscroll/5.0.0/iscroll'
@@ -184,6 +184,8 @@
     $('.iscroller').each(function (i, scroller) {
       new IScroll(scroller);
     });
+
+    $('#ua').text(navigator.userAgent);
   });
 </script>
 </body>

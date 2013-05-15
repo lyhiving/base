@@ -40,11 +40,11 @@ define("handy/base/1.1.0/page-debug", [ "$-debug", "arale/base/1.0.1/base-debug"
             $(document).on("touchend", "[data-transition]", function(e) {
                 e.preventDefault();
                 that.forward(this.href);
-            });
+            }).on("click", "[data-transition]", false);
             $(document).on("touchend", "[data-rel=back]", function(e) {
                 e.preventDefault();
                 window.history.back();
-            });
+            }).on("click", "[data-transition]", false);
             //页面载入触发一次hashchange，跳转到hash对应的页面。
             $win.trigger("hashchange");
         },
