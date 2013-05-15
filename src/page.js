@@ -47,11 +47,11 @@ define(function (require, exports, module) {
           that.backward(squashUrl);
         }
       });
-      $(document).on('touchend', '[data-transition]', function (e) {
+      $(document).on('tap', '[data-transition]',function (e) {
         e.preventDefault();
         that.forward(this.href);
       }).on('click', '[data-transition]', false);
-      $(document).on('touchend', '[data-rel=back]', function (e) {
+      $(document).on('tap', '[data-rel=back]',function (e) {
         e.preventDefault();
         window.history.back();
       }).on('click', '[data-transition]', false);
@@ -145,6 +145,7 @@ define(function (require, exports, module) {
           } else {
             $(this).hide().css('transform', '');
           }
+          window.scrollTo(0, 0);
         }
       });
       Navigation.go(url, backward);

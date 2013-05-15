@@ -78,11 +78,6 @@
       -moz-user-select:none;
       -ms-user-select:none;
       user-select:none;
-      -webkit-text-size-adjust:none;
-      -moz-text-size-adjust:none;
-      -ms-text-size-adjust:none;
-      -o-text-size-adjust:none;
-      text-size-adjust:none;
     }
 
     .page ul {
@@ -119,6 +114,8 @@
         <li id="ua"></li>
         <li><a href="#1">Anchor</a></li>
         <li><a data-transition="true" href="page1.html">Dom异步载入</a></li>
+        <li><a data-transition="true" href="page2.html">Dom已经在存在</a></li>
+        <li><a href="page1.html">页面跳转</a></li>
         <li><a href="#" data-rel="back">后退</a></li>
         <li>List row 5</li>
         <li>List row 6</li>
@@ -169,10 +166,10 @@
     alias: {
       '$': 'handy/jquto/1.0.0/jquto',
       'base': 'arale/base/1.0.1/base',
-      'detector': 'arale/detecotr/1.0.1/detector',
+      'detector': 'arale/detector/1.0.1/detector',
       'flex': 'handy/base/1.1.0/flex',
       'page': 'handy/base/1.1.0/page',
-      'iscroll': 'handy/iscroll/5.0.0/iscroll'
+      'iscroll': 'handy/iscroll/5.0.0/iscroll-iphone'
     }
   });
   seajs.use(['$', 'flex', 'iscroll', 'page'], function ($, Flex, IScroll, Page) {

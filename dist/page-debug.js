@@ -37,11 +37,11 @@ define("handy/base/1.1.0/page-debug", [ "$-debug", "arale/base/1.0.1/base-debug"
                     that.backward(squashUrl);
                 }
             });
-            $(document).on("touchend", "[data-transition]", function(e) {
+            $(document).on("tap", "[data-transition]", function(e) {
                 e.preventDefault();
                 that.forward(this.href);
             }).on("click", "[data-transition]", false);
-            $(document).on("touchend", "[data-rel=back]", function(e) {
+            $(document).on("tap", "[data-rel=back]", function(e) {
                 e.preventDefault();
                 window.history.back();
             }).on("click", "[data-transition]", false);
@@ -129,6 +129,7 @@ define("handy/base/1.1.0/page-debug", [ "$-debug", "arale/base/1.0.1/base-debug"
                     } else {
                         $(this).hide().css("transform", "");
                     }
+                    window.scrollTo(0, 0);
                 }
             });
             Navigation.go(url, backward);
