@@ -118,7 +118,7 @@ define("handy/base/1.1.0/page-debug", [ "$-debug", "arale/base/1.0.1/base-debug"
                     that.activePage = nextPage;
                     $(this).css("transform", "");
                     that.trigger("transition", nextPage);
-                    this.transiting = false;
+                    that.transiting = false;
                 }
             });
             currentDom.animate({

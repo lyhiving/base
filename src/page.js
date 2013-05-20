@@ -134,7 +134,7 @@ define(function (require, exports, module) {
           that.activePage = nextPage;
           $(this).css('transform', '');
           that.trigger('transition', nextPage);
-          this.transiting = false;
+          that.transiting = false;
         }
       });
       currentDom.animate({
