@@ -65,7 +65,9 @@ define(function (require, exports, module) {
      * @param post
      */
     forward: function (href, data, post) {
-      if (href && !this.transiting) {
+      if (this.transiting)
+        return;
+      if (href) {
         this.transiting = true;
         var url = $.type(href) === 'object' ? href : Path.parseUrl(Path.squash(Path.makeUrlAbsolute(href))), i;
 
@@ -83,7 +85,9 @@ define(function (require, exports, module) {
      * @param post
      */
     backward: function (href, data, post) {
-      if (href && !this.transiting) {
+      if (this.transiting)
+        return;
+      if (href) {
         this.transiting = true;
         var url = $.type(href) === 'object' ? href : Path.parseUrl(Path.squash(Path.makeUrlAbsolute(href))), i;
 

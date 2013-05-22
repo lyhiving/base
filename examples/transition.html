@@ -167,7 +167,7 @@
       'iscroll': 'handy/iscroll/5.0.0/iscroll-iphone'
     }
   });
-  seajs.use(['$', 'flex', 'iscroll', 'page'], function ($, Flex, IScroll, Page) {
+  seajs.use(['$', 'flex', 'iscroll', '../src/page'], function ($, Flex, IScroll, Page) {
     Page.on('load', function (page) {
       new IScroll($('.iscroller', page.dom).get(0));
     });
