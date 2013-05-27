@@ -55,7 +55,8 @@ define("handy/base/1.1.0/page-debug", [ "$-debug", "arale/base/1.0.1/base-debug"
      * @param post
      */
         forward: function(href, data, post) {
-            if (href && !this.transiting) {
+            if (this.transiting) return;
+            if (href) {
                 this.transiting = true;
                 var url = $.type(href) === "object" ? href : Path.parseUrl(Path.squash(Path.makeUrlAbsolute(href))), i;
                 if ((i = this._getIndexByUrl(url)) < 0) {
@@ -76,7 +77,8 @@ define("handy/base/1.1.0/page-debug", [ "$-debug", "arale/base/1.0.1/base-debug"
      * @param post
      */
         backward: function(href, data, post) {
-            if (href && !this.transiting) {
+            if (this.transiting) return;
+            if (href) {
                 this.transiting = true;
                 var url = $.type(href) === "object" ? href : Path.parseUrl(Path.squash(Path.makeUrlAbsolute(href))), i;
                 if ((i = this._getIndexByUrl(url)) < 0) {
@@ -99,41 +101,20 @@ define("handy/base/1.1.0/page-debug", [ "$-debug", "arale/base/1.0.1/base-debug"
      */
         transition: function(nextPage, backward) {
             if (nextPage === this.activePage) return;
-            var that = this, url = nextPage.url, nextDom = nextPage.dom, currentPage = this.activePage, currentDom = currentPage.dom, currentUrl = currentPage.url;
+            var that = this, url = nextPage.url, nextDom = nextPage.dom, currentPage = this.activePage, currentDom = currentPage.dom, currentUrl = currentPage.url, slideto = backward ? "page-slidetoright" : "page-slidetoleft", slidefrom = backward ? "page-slidefromleft" : "page-slidefromright";
             that.trigger("transiting");
-            nextDom.css("display", "block");
-            var nextMatrix = nextDom.css("transform").split(")")[0].split(", "), nextY = 0, currentMatrix = currentDom.css("transform").split(")")[0].split(", "), currentY = 0;
-            if (nextMatrix != "none") {
-                nextY = +(nextMatrix[13] || nextMatrix[5]);
-            }
-            if (currentMatrix != "none") {
-                currentY = +(currentMatrix[13] || currentMatrix[5]);
-            }
-            nextDom.css("transform", "translate(" + (backward ? "-" : "") + "100%," + nextY + "px)");
-            nextDom.animate({
-                translate: 0 + "," + nextY + "px"
-            }, {
-                duration: 250,
-                complete: function() {
-                    that.activePage = nextPage;
-                    $(this).css("transform", "");
-                    that.trigger("transition", nextPage);
-                    that.transiting = false;
+            currentDom.addClass(slideto);
+            nextDom.on("animationend webkitAnimationEnd", function(arguments) {
+                currentDom.removeClass("page-active " + slideto);
+                nextDom.removeClass(slidefrom).off("animationend webkitAnimationEnd", arguments.callee);
+                that.activePage = nextPage;
+                if (currentDom.data("cache") === false) {
+                    that.pages.splice(that._getIndexByUrl(currentUrl), 1);
+                    currentDom.remove();
                 }
-            });
-            currentDom.animate({
-                translate: (backward ? "" : "-") + "100%," + currentY + "px"
-            }, {
-                duration: 250,
-                complete: function() {
-                    if (currentDom.data("cache") === false) {
-                        that.pages.splice(that._getIndexByUrl(currentUrl), 1);
-                        $(this).remove();
-                    } else {
-                        $(this).hide().css("transform", "");
-                    }
-                }
-            });
+                that.transiting = false;
+                that.trigger("transition", nextPage);
+            }).addClass("page-active " + slidefrom);
             Navigation.go(url, backward);
         },
         /**
@@ -170,7 +151,7 @@ define("handy/base/1.1.0/page-debug", [ "$-debug", "arale/base/1.0.1/base-debug"
                     if (o.post) {
                         dom.data("cache", false);
                     }
-                    this.activePage.dom.after(dom.hide());
+                    this.activePage.dom.after(dom);
                     page = {
                         url: o.url,
                         dom: dom

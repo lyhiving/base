@@ -12,6 +12,7 @@
   <title>Page Transition</title>
   <link rel="stylesheet" href="../src/reset.css">
   <link rel="stylesheet" href="../src/flex.css">
+  <link rel="stylesheet" href="../src/page.css">
   <style type="text/css">
     body {
       font-size:12px;
@@ -48,18 +49,7 @@
     }
 
     .page {
-      position:absolute;
-      z-index:1;
-      top:0;
-      left:0;
-      width:100%;
-      height:100%;
       -webkit-tap-highlight-color:rgba(0, 0, 0, 0);
-      -webkit-transform:translateZ(0);
-      -moz-transform:translateZ(0);
-      -ms-transform:translateZ(0);
-      -o-transform:translateZ(0);
-      transform:translateZ(0);
     }
 
     .iscroller {
@@ -112,7 +102,7 @@
 <body>
 <header><h1>Header</h1></header>
 <section class="content">
-  <div class="page" data-role="page" data-cache="false">
+  <div class="page page-active" data-role="page" data-cache="false">
     <div class="iscroller">
       <ul>
         <li><a href="#" data-rel="back">后退</a></li>
@@ -153,7 +143,7 @@
       'iscroll': 'handy/iscroll/5.0.0/iscroll'
     }
   });
-  seajs.use(['$', '../src/flex', 'iscroll', '../src/page'], function ($, Flex, IScroll, Page) {
+  seajs.use(['$', 'flex', 'iscroll', '../src/page'], function ($, Flex, IScroll, Page) {
     Page.on('load', function (page) {
       new IScroll($('.iscroller', page.dom).get(0));
     });

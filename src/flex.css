@@ -3,10 +3,6 @@ html, body {
   height:100%;
 }
 
-html {
-  -ms-touch-action:none;
-}
-
 body {
   display:-webkit-box;
   display:-ms-flexbox;
@@ -23,5 +19,4 @@ body {
   -moz-box-flex:1;
   position:relative;
   overflow:hidden;
-  -webkit-touch-callout:none;
 }

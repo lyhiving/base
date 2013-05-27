@@ -15,6 +15,7 @@
     "output": [
       "reset.css",
       "flex.css",
+      "page.css",
       "flex.js",
       "page.js"
     ],

@@ -114,46 +114,24 @@ define(function (require, exports, module) {
         nextDom = nextPage.dom,
         currentPage = this.activePage,
         currentDom = currentPage.dom,
-        currentUrl = currentPage.url;
+        currentUrl = currentPage.url,
+        slideto = backward ? 'page-slidetoright' : 'page-slidetoleft',
+        slidefrom = backward ? 'page-slidefromleft' : 'page-slidefromright';
 
       that.trigger('transiting');
-      nextDom.css('display', 'block');
-      var nextMatrix = nextDom.css('transform').split(')')[0].split(', '),
-        nextY = 0,
-        currentMatrix = currentDom.css('transform').split(')')[0].split(', '),
-        currentY = 0;
+      currentDom.addClass(slideto);
+      nextDom.on('animationend webkitAnimationEnd',function (arguments) {
+        currentDom.removeClass('page-active ' + slideto);
+        nextDom.removeClass(slidefrom).off('animationend webkitAnimationEnd', arguments.callee);
+        that.activePage = nextPage;
+        if (currentDom.data('cache') === false) {
+          that.pages.splice(that._getIndexByUrl(currentUrl), 1);
+          currentDom.remove();
+        }
+        that.transiting = false;
+        that.trigger('transition', nextPage);
+      }).addClass('page-active ' + slidefrom);
 
-      if (nextMatrix != 'none') {
-        nextY = +(nextMatrix[13] || nextMatrix[5]);
-      }
-      if (currentMatrix != 'none') {
-        currentY = +(currentMatrix[13] || currentMatrix[5]);
-      }
-      nextDom.css('transform', 'translate(' + (backward ? '-' : '') + '100%,' + nextY + 'px)');
-      nextDom.animate({
-        translate: 0 + ',' + nextY + 'px'
-      }, {
-        duration: 250,
-        complete: function () {
-          that.activePage = nextPage;
-          $(this).css('transform', '');
-          that.trigger('transition', nextPage);
-          that.transiting = false;
-        }
-      });
-      currentDom.animate({
-        translate: (backward ? '' : '-') + '100%,' + currentY + 'px'
-      }, {
-        duration: 250,
-        complete: function () {
-          if (currentDom.data('cache') === false) {
-            that.pages.splice(that._getIndexByUrl(currentUrl), 1);
-            $(this).remove();
-          } else {
-            $(this).hide().css('transform', '');
-          }
-        }
-      });
       Navigation.go(url, backward);
     },
     /**
@@ -193,7 +171,7 @@ define(function (require, exports, module) {
           if (o.post) {
             dom.data('cache', false);
           }
-          this.activePage.dom.after(dom.hide());
+          this.activePage.dom.after(dom);
           page = {
             url: o.url,
             dom: dom

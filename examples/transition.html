@@ -6,16 +6,18 @@
   <meta name="format-detection" content="telephone=no">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
-  <!--IE点击出现灰色方块-->
-  <meta name="msapplication-tap-highlight" content="no"/>
 
   <title>Page Transition</title>
   <link rel="stylesheet" href="../src/reset.css">
   <link rel="stylesheet" href="../src/flex.css">
+  <link rel="stylesheet" href="../src/page.css">
   <style type="text/css">
     body {
-      font-size:12px;
+      font-size:1rem;
       font-family:ubuntu, helvetica, arial;
+      -ms-touch-select:none;
+      -webkit-user-select:none;
+      -ms-touch-action: none;
     }
 
     header {
@@ -48,18 +50,7 @@
     }
 
     .page {
-      position:absolute;
-      z-index:1;
-      top:0;
-      left:0;
-      width:100%;
-      height:100%;
       -webkit-tap-highlight-color:rgba(0, 0, 0, 0);
-      -webkit-transform:translateZ(0);
-      -moz-transform:translateZ(0);
-      -ms-transform:translateZ(0);
-      -o-transform:translateZ(0);
-      transform:translateZ(0);
     }
 
     .iscroller {
@@ -103,14 +94,14 @@
 <body>
 <header><h1>Header</h1></header>
 <section class="content">
-  <div class="page" data-role="page">
+  <div class="page page-active" data-role="page">
     <div class="iscroller">
       <ul>
         <li><a href="#1">Anchor</a></li>
         <li><a data-transition="true" href="page1.html">Dom异步载入</a></li>
         <li><a data-transition="true" href="page2.html">Dom已经在存在</a></li>
         <li><a href="page1.html">页面跳转</a></li>
-        <li><a href="#" data-rel="back">后退</a></li>
+        <li><a href="#" data-rel="back">后退1</a></li>
         <li id="ua"></li>
         <li>List row 5</li>
         <li>List row 6</li>
@@ -141,7 +132,7 @@
       </ul>
     </div>
   </div>
-  <div class="page" data-role="page" data-url="page2.html" style="display:none">
+  <div class="page" data-role="page" data-url="page2.html">
     <div class="iscroller">
       <ul>
         <li><a href="#" data-rel="back">后退</a></li>
@@ -164,7 +155,7 @@
       'detector': 'arale/detector/1.0.1/detector',
       'flex': 'handy/base/1.1.0/flex',
       'page': 'handy/base/1.1.0/page',
-      'iscroll': 'handy/iscroll/5.0.0/iscroll-iphone'
+      'iscroll': 'handy/iscroll/5.0.0/iscroll'
     }
   });
   seajs.use(['$', 'flex', 'iscroll', '../src/page'], function ($, Flex, IScroll, Page) {
@@ -177,7 +168,7 @@
       new IScroll(scroller);
     });
 
-    $('#ua').text(navigator.userAgent);
+    $('#ua').text(Object.keys({a: 1, b: false, c: ''}).length)//navigator.userAgent);
   });
 </script>
 </body>
