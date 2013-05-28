@@ -8,10 +8,10 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
 
   <title>Page Transition</title>
-  <link rel="stylesheet" href="../dist/reset.css">
-  <link rel="stylesheet" href="../dist/flex.css">
-  <link rel="stylesheet" href="../dist/page.css">
-  <link rel="stylesheet" href="../dist/trasitions/slide.css">
+  <link rel="stylesheet" href="../src/reset.css">
+  <link rel="stylesheet" href="../src/flex.css">
+  <link rel="stylesheet" href="../src/page.css">
+  <link rel="stylesheet" href="../src/transitions/slide.css">
   <style type="text/css">
     body {
       font-size:1rem;
@@ -133,7 +133,7 @@
       </ul>
     </div>
   </div>
-  <div class="page" data-role="page" data-url="page2.html">
+  <div class="page" data-role="page" data-url="page2.html" data-title="Page2">
     <div class="iscroller">
       <ul>
         <li><a href="#" data-rel="back">后退</a></li>
@@ -159,10 +159,11 @@
       'iscroll': 'handy/iscroll/5.0.0/iscroll'
     }
   });
-  seajs.use(['$', 'flex', 'iscroll', '../src/page'], function ($, Flex, IScroll, Page) {
+  seajs.use(['$', '../src/flex', 'iscroll', '../src/page'], function ($, Flex, IScroll, Page) {
     Page.on('load', function (page) {
       new IScroll($('.iscroller', page.dom).get(0));
     });
+
     Page.init();
 
     $('.iscroller').each(function (i, scroller) {

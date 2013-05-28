@@ -1,4 +1,9 @@
 /*! define handy/base/1.1.0/page-debug.css */
+.content {
+  position:relative;
+  -webkit-perspective:1200px;
+  perspective:1200px
+}
 .page {
   position:absolute;
   width:100%;

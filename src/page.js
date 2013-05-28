@@ -7,6 +7,12 @@ define(function (require, exports, module) {
     page;
 
   var Page = Base.extend({
+    attrs: {
+      easeout: 'page-slideoutleft',
+      easein: 'page-slideinright',
+      easeoutreverse: 'page-slideoutright',
+      easeinreverse: 'page-slideinleft'
+    },
     init: function () {
       this._initPages();
       this._initEvents();
@@ -19,14 +25,16 @@ define(function (require, exports, module) {
         if (i === 0) {
           pages.push({
             url: Path.parseUrl(Path.documentUrl.hrefNoHash),
-            dom: $(page)
+            dom: $(page),
+            title: document.title
           });
         } else {
           var url = $(page).data('url');
           if (url) {
             pages.push({
               url: Path.parseUrl(Path.makeUrlAbsolute(url)),
-              dom: $(page)
+              dom: $(page),
+              title: $(page).data('title')
             });
           }
         }
@@ -115,21 +123,25 @@ define(function (require, exports, module) {
         currentPage = this.activePage,
         currentDom = currentPage.dom,
         currentUrl = currentPage.url,
-        slideto = backward ? 'page-slidetoright' : 'page-slidetoleft',
-        slidefrom = backward ? 'page-slidefromleft' : 'page-slidefromright';
+        slideto = backward ? this.get('easeoutreverse') : this.get('easeout'),
+        slidefrom = backward ? this.get('easeinreverse') : this.get('easein');
 
       that.trigger('transiting');
-      currentDom.addClass(slideto);
-      nextDom.on('animationend webkitAnimationEnd',function (arguments) {
-        currentDom.removeClass('page-active ' + slideto);
-        nextDom.removeClass(slidefrom).off('animationend webkitAnimationEnd', arguments.callee);
-        that.activePage = nextPage;
+
+      nextPage.title && (document.title = nextPage.title);
+      currentDom.on('animationend webkitAnimationEnd',function (arguments) {
+        currentDom.removeClass('page-active ' + slideto).off('animationend webkitAnimationEnd', arguments.callee);
         if (currentDom.data('cache') === false) {
           that.pages.splice(that._getIndexByUrl(currentUrl), 1);
           currentDom.remove();
         }
+      }).addClass(slideto);
+      nextDom.on('animationend webkitAnimationEnd',function (arguments) {
+        nextDom.removeClass(slidefrom).off('animationend webkitAnimationEnd', arguments.callee);
+        that.activePage = nextPage;
         that.transiting = false;
         that.trigger('transition', nextPage);
+        window.scrollTo(0, 0);
       }).addClass('page-active ' + slidefrom);
 
       Navigation.go(url, backward);
@@ -174,7 +186,8 @@ define(function (require, exports, module) {
           this.activePage.dom.after(dom);
           page = {
             url: o.url,
-            dom: dom
+            dom: dom,
+            title: title
           };
           this.trigger('load', page);
           if (backward) {

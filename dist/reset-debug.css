@@ -1,5 +1,5 @@
 /*! define handy/base/1.1.0/reset-debug.css */
-* {
+*, *:after, *:before {
   -webkit-box-sizing:border-box;
   -moz-box-sizing:border-box;
   box-sizing:border-box;

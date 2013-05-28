@@ -1,27 +1,27 @@
 /*! define handy/base/1.1.0/transitions/slide-debug.css */
-.page-slidetoleft {
-  -webkit-animation:slidetoleft .25s linear;
-  animation:slidetoleft .25s linear;
+.page-slideoutleft {
+  -webkit-animation:slideoutleft .25s linear;
+  animation:slideoutleft .25s linear;
 }
 
-.page-slidefromright {
+.page-slideinright {
   z-index:2;
-  -webkit-animation:slidefromright .25s linear;
-  animation:slidefromright .25s linear;
+  -webkit-animation:slideinright .25s linear;
+  animation:slideinright .25s linear;
 }
 
-.page-slidetoright {
-  -webkit-animation:slidetoright .25s linear;
-  animation:slidetoright .25s linear;
+.page-slideoutright {
+  -webkit-animation:slideoutright .25s linear;
+  animation:slideoutright .25s linear;
 }
 
-.page-slidefromleft {
+.page-slideinleft {
   z-index:2;
-  -webkit-animation:slidefromleft .25s linear;
-  animation:slidefromleft .25s linear;
+  -webkit-animation:slideinleft .25s linear;
+  animation:slideinleft .25s linear;
 }
 
-@keyframes slidetoleft {
+@keyframes slideoutleft {
   from {
     transform:translateX(0%);
   }
@@ -30,7 +30,7 @@
   }
 }
 
-@-webkit-keyframes slidetoleft {
+@-webkit-keyframes slideoutleft {
   from {
     -webkit-transform:translateX(0%);
   }
@@ -39,7 +39,7 @@
   }
 }
 
-@keyframes slidefromright {
+@keyframes slideinright {
   from {
     transform:translateX(100%);
   }
@@ -48,7 +48,7 @@
   }
 }
 
-@-webkit-keyframes slidefromright {
+@-webkit-keyframes slideinright {
   from {
     -webkit-transform:translateX(100%);
   }
@@ -57,7 +57,7 @@
   }
 }
 
-@keyframes slidetoright {
+@keyframes slideoutright {
   from {
     transform:translateX(0%);
   }
@@ -66,7 +66,7 @@
   }
 }
 
-@-webkit-keyframes slidetoright {
+@-webkit-keyframes slideoutright {
   from {
     -webkit-transform:translateX(0%);
   }
@@ -75,7 +75,7 @@
   }
 }
 
-@keyframes slidefromleft {
+@keyframes slideinleft {
   from {
     transform:translateX(-100%);
   }
@@ -84,7 +84,7 @@
   }
 }
 
-@-webkit-keyframes slidefromleft {
+@-webkit-keyframes slideinleft {
   from {
     -webkit-transform:translateX(-100%);
   }

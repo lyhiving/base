@@ -1,3 +1,8 @@
+.content {
+  position:relative;
+  -webkit-perspective:1200px;
+  perspective:1200px
+}
 .page {
   position:absolute;
   width:100%;
