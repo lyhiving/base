@@ -16,6 +16,7 @@
       "reset.css",
       "flex.css",
       "page.css",
+      "transitions/slide.css",
       "flex.js",
       "page.js"
     ],

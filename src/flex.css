@@ -10,7 +10,6 @@ body {
   -ms-flex-direction:column;
   -webkit-box-orient:vertical;
   -moz-box-orient:vertical;
-  /*overflow:hidden;  this is important to prevent the whole page to bounce 但是在Android 2.x 没有滚动条，没法scrollTop(0,0) */
 }
 
 .content {
