@@ -1,5 +1,5 @@
-define("handy/base/1.1.0/page-debug", [ "$-debug", "arale/base/1.0.1/base-debug", "arale/class/1.0.0/class-debug", "arale/events/1.0.0/events-debug", "./path-debug", "./navigation-debug", "./history-debug" ], function(require, exports, module) {
-    var $ = require("$-debug"), Base = require("arale/base/1.0.1/base-debug"), Path = require("./path-debug"), Navigation = require("./navigation-debug"), $win = $(window), page;
+define("handy/base/1.1.0/page-debug", [ "$-debug", "arale/base/1.1.1/base-debug", "arale/class/1.1.0/class-debug", "arale/events/1.1.0/events-debug", "./path-debug", "./navigation-debug", "./history-debug" ], function(require, exports, module) {
+    var $ = require("$-debug"), Base = require("arale/base/1.1.1/base-debug"), Path = require("./path-debug"), Navigation = require("./navigation-debug"), $win = $(window), page;
     var Page = Base.extend({
         attrs: {
             easeout: "page-slideoutleft",

@@ -1,6 +1,6 @@
-define("handy/base/1.1.0/flex-debug", [ "$-debug", "arale/detector/1.0.1/detector-debug" ], function(require, exports, module) {
+define("handy/base/1.1.0/flex-debug", [ "$-debug", "arale/detector/1.2.1/detector-debug" ], function(require, exports, module) {
     var $ = require("$-debug");
-    var Detector = require("arale/detector/1.0.1/detector-debug");
+    var Detector = require("arale/detector/1.2.1/detector-debug");
     //IOS 是否是Web App模式
     if (!navigator.standalone) {
         var device = Detector.device, browser = Detector.browser, support = $.support;

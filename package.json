@@ -13,8 +13,6 @@
   },
   "spm": {
     "output": [
-      "reset.css",
-      "flex.css",
       "page.css",
       "transitions/slide.css",
       "flex.js",
@@ -22,8 +20,12 @@
     ],
     "alias": {
       "$": "$",
-      "base": "arale/base/1.0.1/base",
-      "detector": "arale/detector/1.0.1/detector"
+      "base": "arale/base/1.1.1/base",
+      "detector": "arale/detector/1.2.1/detector"
     }
+  },
+  "devDependencies": {
+    "grunt": "~0.4.1",
+    "grunt-contrib-uglify": "~0.2.0"
   }
 }

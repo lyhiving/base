@@ -8,38 +8,60 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
 
   <title>Page Transition</title>
-  <link rel="stylesheet" href="../src/reset.css">
-  <link rel="stylesheet" href="../src/flex.css">
+  <link rel="stylesheet" href="http://handyjs.github.io/base-ui/static/css/base-ui.css">
   <link rel="stylesheet" href="../src/page.css">
   <link rel="stylesheet" href="../src/transitions/slide.css">
   <style type="text/css">
+    html, body {
+      width:100%;
+      height:100%;
+    }
+
     body {
       font-size:1rem;
       font-family:ubuntu, helvetica, arial;
       -ms-touch-select:none;
       -webkit-user-select:none;
-      -ms-touch-action: none;
+      -ms-touch-action:none;
+      display:-webkit-box;
+      display:-ms-flexbox;
+      display:-moz-box;
+      -ms-flex-direction:column;
+      -webkit-box-orient:vertical;
+      -moz-box-orient:vertical;
     }
 
     header {
+      -moz-box-flex:0;
+      height:45px;
+      line-height:45px;
       background:#CD235C;
-      padding:.5rem;
+      padding:0;
       color:#eee;
-      font-size:1.25rem;
+      font-size:20px;
       text-align:center;
       font-weight:bold;
     }
 
     footer {
+      -moz-box-flex:0;
+      height:43px;
+      line-height:43px;
       background:#444;
-      padding:.5rem;
+      padding:0;
+      border-top:1px solid #444;
       color:#eee;
-      font-size:1rem;
+      font-size:20px;
       text-align:center;
+      font-weight:bold;
     }
 
     .content {
       background:#ccc;
+      -webkit-box-flex:1;
+      -ms-flex:1;
+      -moz-box-flex:1;
+      overflow:hidden;
     }
 
     .page {
@@ -136,14 +158,13 @@
   </div>
 </section>
 <footer>Footer</footer>
-<!--<script src="http://static.alipayobjects.com/seajs/1.3.1/sea.js"></script>-->
-<script src="http://assets.dev.alipay.net/seajs/1.3.1/sea.js"></script>
+<script src="http://assets.dev.alipay.net/??seajs/seajs/2.1.1/sea.js,handy/jquto/1.0.2/jquto.js"></script>
 <script>
   seajs.config({
     alias: {
       '$': 'handy/jquto/1.0.2/jquto',
-      'base': 'arale/base/1.0.1/base',
-      'detector': 'arale/detector/1.0.1/detector',
+      'base': 'arale/base/1.1.1/base',
+      'detector': 'arale/detector/1.2.1/detector',
       'flex': 'handy/base/1.1.0/flex',
       'page': 'handy/base/1.1.0/page',
       'iscroll': 'handy/iscroll/5.0.0/iscroll'

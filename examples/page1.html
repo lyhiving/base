@@ -8,17 +8,27 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
 
   <title>Ajax Page</title>
-  <link rel="stylesheet" href="../dist/reset.css">
-  <link rel="stylesheet" href="../dist/flex.css">
+  <link rel="stylesheet" href="http://handyjs.github.io/base-ui/static/css/base-ui.css">
   <link rel="stylesheet" href="../dist/page.css">
   <link rel="stylesheet" href="../dist/transitions/slide.css">
   <style type="text/css">
+    html, body {
+      width:100%;
+      height:100%;
+    }
+
     body {
       font-size:1rem;
       font-family:ubuntu, helvetica, arial;
       -ms-touch-select:none;
       -webkit-user-select:none;
       -ms-touch-action:none;
+      display:-webkit-box;
+      display:-ms-flexbox;
+      display:-moz-box;
+      -ms-flex-direction:column;
+      -webkit-box-orient:vertical;
+      -moz-box-orient:vertical;
     }
 
     header {
@@ -48,6 +58,10 @@
 
     .content {
       background:#ccc;
+      -webkit-box-flex:1;
+      -ms-flex:1;
+      -moz-box-flex:1;
+      overflow:hidden;
     }
 
     .page {
