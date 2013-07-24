@@ -6,18 +6,15 @@
 
 ## 组成
 
-* reset 页面重置
-
-    包括样式重置、JS方法重置，提供部分Javascript1.6特性
-
 * flex 页面布局
 
     提供flexbox的自适应布局方式
 
 * page 
 
-    提供页面路由、history处理功能
-    
+    提供页面路由、history处理功能、页面切换的transition效果
+* seajs-intro seajs-outro
+    提供异步加载seajs的hack
     
 ---
 
