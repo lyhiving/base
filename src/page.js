@@ -8,38 +8,40 @@ define(function (require, exports, module) {
 
   var Page = Base.extend({
     attrs: {
+      initPath: '',
+      animate: false,
       easeout: 'page-slideoutleft',
       easein: 'page-slideinright',
       easeoutreverse: 'page-slideoutright',
       easeinreverse: 'page-slideinleft'
     },
-    init: function () {
-      this._initPages();
+    init: function (pages) {
+      this._initPages(pages);
       this._initEvents();
     },
-    _initPages: function () {
+    _initPages: function (pages) {
+      
+      this.pages = [];
 
-      var pages = this.pages = [];
-      //遍历所有.page，缓存
-      $.each($('.page'), function (i, page) {
-        if (i === 0) {
-          pages.push({
-            url: Path.parseUrl(Path.documentUrl.hrefNoHash),
-            dom: $(page),
-            title: document.title
-          });
-        } else {
-          var url = $(page).data('url');
-          if (url) {
-            pages.push({
-              url: Path.parseUrl(Path.makeUrlAbsolute(url)),
-              dom: $(page),
-              title: $(page).data('title')
-            });
-          }
-        }
-      });
-      this.activePage = this.pages[0];
+      for(var url in pages){
+        var $page = $('[data-url="' + url + '"]');
+        this.pages.push({
+          url: Path.parseUrl(Path.makeUrlAbsolute(url)),
+          dom: $page,
+          title: $page.data('title'), 
+          control: pages[url]
+        });
+      }
+      
+      var initPath = this.get('initPath');
+      if(!initPath) {
+        this.activePage = this.pages[0];
+      } else {
+        var url = Path.parseUrl(Path.squash(Path.makeUrlAbsolute(initPath)));
+        this.activePage = this.pages[this._getIndexByUrl(url)];
+      }
+
+      this.forward(this.activePage.url, this.get('data'));
     },
     _initEvents: function () {
       var that = this;
@@ -49,7 +51,9 @@ define(function (require, exports, module) {
           squashUrl = Path.parseUrl(Path.squash(location.href)),
           href = squashUrl.hrefNoHash;
 
-        if (state.direction === 'forward') {
+        if (state.direction == 'back') {
+          window.history.back();
+        } else if (state.direction === 'forward') {
           that.forward(squashUrl);
         } else {
           that.backward(squashUrl);
@@ -63,8 +67,6 @@ define(function (require, exports, module) {
         e.preventDefault();
         window.history.back();
       });
-      //页面载入触发一次hashchange，跳转到hash对应的页面。
-      $win.trigger('hashchange');
     },
     /**
      * 前进
@@ -82,7 +84,7 @@ define(function (require, exports, module) {
         if ((i = this._getIndexByUrl(url)) < 0) {
           this._createPage({url: url, data: data, post: post});
         } else {
-          this.transition(this.pages[i]);
+          this.transition(this.pages[i], false, data);
         }
       }
     },
@@ -113,9 +115,8 @@ define(function (require, exports, module) {
      * @param nextPage
      * @param backward
      */
-    transition: function (nextPage, backward) {
-      if (nextPage === this.activePage)
-        return;
+    transition: function (nextPage, backward, data) {
+      // if (nextPage === this.activePage) return;
 
       var that = this,
         url = nextPage.url,
@@ -129,22 +130,37 @@ define(function (require, exports, module) {
       that.trigger('transiting');
 
       nextPage.title && (document.title = nextPage.title);
-      currentDom.on('animationend webkitAnimationEnd',function (arguments) {
-        currentDom.removeClass('page-active ' + slideto).off('animationend webkitAnimationEnd', arguments.callee);
+      var currentAction = function() {
+        currentDom.removeClass('ui-page-active');
+        if(that.get('animate')) {
+          currentDom.removeClass(slideto).off('animationend webkitAnimationEnd', arguments.callee);
+        }
         if (currentDom.data('cache') === false) {
           that.pages.splice(that._getIndexByUrl(currentUrl), 1);
           currentDom.remove();
         }
-      }).addClass(slideto);
-      nextDom.on('animationend webkitAnimationEnd',function (arguments) {
-        nextDom.removeClass(slidefrom).off('animationend webkitAnimationEnd', arguments.callee);
+      },
+      nextAction = function() {
+        if(that.get('animate')) {
+          nextDom.removeClass(slidefrom).off('animationend webkitAnimationEnd', arguments.callee);
+        }
         that.activePage = nextPage;
         that.transiting = false;
         that.trigger('transition', nextPage);
         window.scrollTo(0, 0);
-      }).addClass('page-active ' + slidefrom);
+      };
 
+      if(this.get('animate')) {
+        currentDom.on('animationend webkitAnimationEnd', currentAction).addClass(slideto);
+        nextDom.on('animationend webkitAnimationEnd', nextAction).addClass('ui-page-active ' + slidefrom);
+      } else {
+        currentAction();
+        nextAction();
+        nextDom.addClass('ui-page-active');
+      }
+      
       Navigation.go(url, backward);
+      nextPage.control && nextPage.control(data);
     },
     /**
      * 获取page的Index
@@ -206,7 +222,5 @@ define(function (require, exports, module) {
     }
   });
 
-  page = new Page();
-
-  return page;
+  return Page;
 });

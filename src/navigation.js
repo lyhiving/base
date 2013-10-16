@@ -34,27 +34,28 @@ define(function (require, exports, module) {
      */
     var newHref = Path.parseUrl(Path.squash(location.href)).hrefNoHash;
     //判断页面是否跳转
-    if (newHref === Navigation.currentHref) {
-      //页面首次加载
-      if (isInit) {
-        return;
-      } else {
-        History.add(newHref);
-        isInit = true;
-      }
-    } else {
+    if (newHref !== Navigation.currentHref) {
       //原页面对应的History索引，这个是肯定能找到的
       var oldIndex = History.find(Navigation.currentHref);
       //新页面对应History索引，如果没找到(-1)那就是首次访问
       var newIndex = History.find(newHref);
       //触发自定义事件
+      var direction;
+      if(newIndex < 0) {
+        direction = 'back';
+      } else if(newIndex < oldIndex) {
+        direction = 'backward';
+      } else {
+        direction = 'forward';
+      }
       $(this).trigger('navigate', {
         state: {
           //如果在History中能获取到index，并且是在老页面索引之前，那就是“后退”了。否则，判定为前进！
-          direction: ( -1 < newIndex && newIndex < oldIndex) ? 'backward' : 'forward'
+          direction: direction
         }
       });
     }
+    console.log(History._stack);
   });
 
   return Navigation;

@@ -1,45 +1,46 @@
-define("handy/base/1.1.0/page-debug", [ "$-debug", "arale/base/1.1.1/base-debug", "arale/class/1.1.0/class-debug", "arale/events/1.1.0/events-debug", "./path-debug", "./navigation-debug", "./history-debug" ], function(require, exports, module) {
+define("handy/base/1.1.1/page-debug", [ "$-debug", "arale/base/1.1.1/base-debug", "arale/class/1.1.0/class-debug", "arale/events/1.1.0/events-debug", "./path-debug", "./navigation-debug", "./history-debug" ], function(require, exports, module) {
     var $ = require("$-debug"), Base = require("arale/base/1.1.1/base-debug"), Path = require("./path-debug"), Navigation = require("./navigation-debug"), $win = $(window), page;
     var Page = Base.extend({
         attrs: {
+            initPath: "",
+            animate: false,
             easeout: "page-slideoutleft",
             easein: "page-slideinright",
             easeoutreverse: "page-slideoutright",
             easeinreverse: "page-slideinleft"
         },
-        init: function() {
-            this._initPages();
+        init: function(pages) {
+            this._initPages(pages);
             this._initEvents();
         },
-        _initPages: function() {
-            var pages = this.pages = [];
-            //遍历所有.page，缓存
-            $.each($(".page"), function(i, page) {
-                if (i === 0) {
-                    pages.push({
-                        url: Path.parseUrl(Path.documentUrl.hrefNoHash),
-                        dom: $(page),
-                        title: document.title
-                    });
-                } else {
-                    var url = $(page).data("url");
-                    if (url) {
-                        pages.push({
-                            url: Path.parseUrl(Path.makeUrlAbsolute(url)),
-                            dom: $(page),
-                            title: $(page).data("title")
-                        });
-                    }
-                }
-            });
-            this.activePage = this.pages[0];
+        _initPages: function(pages) {
+            this.pages = [];
+            for (var url in pages) {
+                var $page = $('[data-url="' + url + '"]');
+                this.pages.push({
+                    url: Path.parseUrl(Path.makeUrlAbsolute(url)),
+                    dom: $page,
+                    title: $page.data("title"),
+                    control: pages[url]
+                });
+            }
+            var initPath = this.get("initPath");
+            if (!initPath) {
+                this.activePage = this.pages[0];
+            } else {
+                var url = Path.parseUrl(Path.squash(Path.makeUrlAbsolute(initPath)));
+                this.activePage = this.pages[this._getIndexByUrl(url)];
+            }
+            this.forward(this.activePage.url, this.get("data"));
         },
         _initEvents: function() {
             var that = this;
             //jquery navigation widget
             $win.on("navigate", function(e, data) {
                 var state = data.state, squashUrl = Path.parseUrl(Path.squash(location.href)), href = squashUrl.hrefNoHash;
-                if (state.direction === "forward") {
+                if (state.direction == "back" && that.get("data").backUrl) {
+                    window.location.href = that.get("data").backUrl;
+                } else if (state.direction === "forward") {
                     that.forward(squashUrl);
                 } else {
                     that.backward(squashUrl);
@@ -53,8 +54,6 @@ define("handy/base/1.1.0/page-debug", [ "$-debug", "arale/base/1.1.1/base-debug"
                 e.preventDefault();
                 window.history.back();
             });
-            //页面载入触发一次hashchange，跳转到hash对应的页面。
-            $win.trigger("hashchange");
         },
         /**
      * 前进
@@ -74,7 +73,7 @@ define("handy/base/1.1.0/page-debug", [ "$-debug", "arale/base/1.1.1/base-debug"
                         post: post
                     });
                 } else {
-                    this.transition(this.pages[i]);
+                    this.transition(this.pages[i], false, data);
                 }
             }
         },
@@ -107,26 +106,39 @@ define("handy/base/1.1.0/page-debug", [ "$-debug", "arale/base/1.1.1/base-debug"
      * @param nextPage
      * @param backward
      */
-        transition: function(nextPage, backward) {
-            if (nextPage === this.activePage) return;
+        transition: function(nextPage, backward, data) {
+            // if (nextPage === this.activePage) return;
             var that = this, url = nextPage.url, nextDom = nextPage.dom, currentPage = this.activePage, currentDom = currentPage.dom, currentUrl = currentPage.url, slideto = backward ? this.get("easeoutreverse") : this.get("easeout"), slidefrom = backward ? this.get("easeinreverse") : this.get("easein");
             that.trigger("transiting");
             nextPage.title && (document.title = nextPage.title);
-            currentDom.on("animationend webkitAnimationEnd", function(arguments) {
-                currentDom.removeClass("page-active " + slideto).off("animationend webkitAnimationEnd", arguments.callee);
+            var currentAction = function() {
+                currentDom.removeClass("ui-page-active");
+                if (that.get("animate")) {
+                    currentDom.removeClass(slideto).off("animationend webkitAnimationEnd", arguments.callee);
+                }
                 if (currentDom.data("cache") === false) {
                     that.pages.splice(that._getIndexByUrl(currentUrl), 1);
                     currentDom.remove();
                 }
-            }).addClass(slideto);
-            nextDom.on("animationend webkitAnimationEnd", function(arguments) {
-                nextDom.removeClass(slidefrom).off("animationend webkitAnimationEnd", arguments.callee);
+            }, nextAction = function() {
+                if (that.get("animate")) {
+                    nextDom.removeClass(slidefrom).off("animationend webkitAnimationEnd", arguments.callee);
+                }
                 that.activePage = nextPage;
                 that.transiting = false;
                 that.trigger("transition", nextPage);
                 window.scrollTo(0, 0);
-            }).addClass("page-active " + slidefrom);
+            };
+            if (this.get("animate")) {
+                currentDom.on("animationend webkitAnimationEnd", currentAction).addClass(slideto);
+                nextDom.on("animationend webkitAnimationEnd", nextAction).addClass("ui-page-active " + slidefrom);
+            } else {
+                currentAction();
+                nextAction();
+                nextDom.addClass("ui-page-active");
+            }
             Navigation.go(url, backward);
+            nextPage.control && nextPage.control(data);
         },
         /**
      * 获取page的Index
@@ -184,11 +196,10 @@ define("handy/base/1.1.0/page-debug", [ "$-debug", "arale/base/1.1.1/base-debug"
             });
         }
     });
-    page = new Page();
-    return page;
+    return Page;
 });
 
-define("handy/base/1.1.0/path-debug", [ "$-debug" ], function(require, exports, module) {
+define("handy/base/1.1.1/path-debug", [ "$-debug" ], function(require, exports, module) {
     var $ = require("$-debug");
     var $base = $("head").find("base");
     var Path = {
@@ -416,8 +427,8 @@ define("handy/base/1.1.0/path-debug", [ "$-debug" ], function(require, exports, 
     return Path;
 });
 
-define("handy/base/1.1.0/navigation-debug", [ "$-debug", "handy/base/1.1.0/path-debug", "handy/base/1.1.0/history-debug" ], function(require, exports, module) {
-    var $ = require("$-debug"), Path = require("handy/base/1.1.0/path-debug"), History = require("handy/base/1.1.0/history-debug"), $win = $(window), isInit;
+define("handy/base/1.1.1/navigation-debug", [ "$-debug", "handy/base/1.1.1/path-debug", "handy/base/1.1.1/history-debug" ], function(require, exports, module) {
+    var $ = require("$-debug"), Path = require("handy/base/1.1.1/path-debug"), History = require("handy/base/1.1.1/history-debug"), $win = $(window), isInit;
     var Navigation = {
         currentHref: Path.documentBase.hrefNoHash,
         go: function(newPath, backward) {
@@ -444,32 +455,33 @@ define("handy/base/1.1.0/navigation-debug", [ "$-debug", "handy/base/1.1.0/path-
      */
         var newHref = Path.parseUrl(Path.squash(location.href)).hrefNoHash;
         //判断页面是否跳转
-        if (newHref === Navigation.currentHref) {
-            //页面首次加载
-            if (isInit) {
-                return;
-            } else {
-                History.add(newHref);
-                isInit = true;
-            }
-        } else {
+        if (newHref !== Navigation.currentHref) {
             //原页面对应的History索引，这个是肯定能找到的
             var oldIndex = History.find(Navigation.currentHref);
             //新页面对应History索引，如果没找到(-1)那就是首次访问
             var newIndex = History.find(newHref);
             //触发自定义事件
+            var direction;
+            if (newIndex < 0) {
+                direction = "back";
+            } else if (newIndex < oldIndex) {
+                direction = "backward";
+            } else {
+                direction = "forward";
+            }
             $(this).trigger("navigate", {
                 state: {
                     //如果在History中能获取到index，并且是在老页面索引之前，那就是“后退”了。否则，判定为前进！
-                    direction: -1 < newIndex && newIndex < oldIndex ? "backward" : "forward"
+                    direction: direction
                 }
             });
         }
+        console.log(History._stack);
     });
     return Navigation;
 });
 
-define("handy/base/1.1.0/history-debug", [ "$-debug" ], function(require, exports, module) {
+define("handy/base/1.1.1/history-debug", [ "$-debug" ], function(require, exports, module) {
     var $ = require("$-debug"), undefined = window.undefined;
     function History() {
         this._stack = [];
