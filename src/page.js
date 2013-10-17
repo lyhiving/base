@@ -47,16 +47,15 @@ define(function (require, exports, module) {
       var that = this;
       //jquery navigation widget
       $win.on("navigate", function (e, data) {
-        var state = data.state,
-          squashUrl = Path.parseUrl(Path.squash(location.href)),
-          href = squashUrl.hrefNoHash;
-
-        if (state.direction == 'back') {
-          window.history.back();
-        } else if (state.direction === 'forward') {
-          that.forward(squashUrl);
+        var state = data.state;
+        
+        // TODO: hack
+        if (!state.url && that.get('data').backUrl) {
+          window.location.href = that.get('data').backUrl;
+        } else if (state.direction ==='forward') {
+          that.forward(state.url);
         } else {
-          that.backward(squashUrl);
+          that.backward(state.url);
         }
       });
       $(document).on('click', '[data-transition]', function (e) {
@@ -104,7 +103,7 @@ define(function (require, exports, module) {
         if ((i = this._getIndexByUrl(url)) < 0) {
           this._createPage({url: url, data: data, post: post}, true);
         } else {
-          this.transition(this.pages[i], true);
+          this.transition(this.pages[i], true, data);
         }
       } else {
         window.history.back();

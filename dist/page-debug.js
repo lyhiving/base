@@ -37,13 +37,14 @@ define("handy/base/1.1.1/page-debug", [ "$-debug", "arale/base/1.1.1/base-debug"
             var that = this;
             //jquery navigation widget
             $win.on("navigate", function(e, data) {
-                var state = data.state, squashUrl = Path.parseUrl(Path.squash(location.href)), href = squashUrl.hrefNoHash;
-                if (state.direction == "back" && that.get("data").backUrl) {
+                var state = data.state;
+                // TODO: hack
+                if (!state.url && that.get("data").backUrl) {
                     window.location.href = that.get("data").backUrl;
                 } else if (state.direction === "forward") {
-                    that.forward(squashUrl);
+                    that.forward(state.url);
                 } else {
-                    that.backward(squashUrl);
+                    that.backward(state.url);
                 }
             });
             $(document).on("click", "[data-transition]", function(e) {
@@ -95,7 +96,7 @@ define("handy/base/1.1.1/page-debug", [ "$-debug", "arale/base/1.1.1/base-debug"
                         post: post
                     }, true);
                 } else {
-                    this.transition(this.pages[i], true);
+                    this.transition(this.pages[i], true, data);
                 }
             } else {
                 window.history.back();
@@ -441,9 +442,10 @@ define("handy/base/1.1.1/navigation-debug", [ "$-debug", "handy/base/1.1.1/path-
             }
             if (index < 0) {
                 //如果是forward，则需要把current对应的数据之后的清除
-                backward || History.clearForward(this.currentHref);
                 History.add(newPath.hrefNoHash, backward);
             }
+            backward && History.clearForward(newPath.hrefNoHash);
+            console.log(History._stack);
             this.currentHref = newPath.hrefNoHash;
         }
     };
@@ -453,7 +455,7 @@ define("handy/base/1.1.1/navigation-debug", [ "$-debug", "handy/base/1.1.1/path-
      * http://127.0.0.1/dev/handyjs/base/examples/flex.html#/dev/handyjs/base/examples/page1.html
      * 得到的newURL = "http://127.0.0.1/dev/handyjs/base/examples/page1.html"
      */
-        var newHref = Path.parseUrl(Path.squash(location.href)).hrefNoHash;
+        var newUrl = Path.parseUrl(Path.squash(location.href)), newHref = newUrl.hrefNoHash;
         //判断页面是否跳转
         if (newHref !== Navigation.currentHref) {
             //原页面对应的History索引，这个是肯定能找到的
@@ -461,22 +463,14 @@ define("handy/base/1.1.1/navigation-debug", [ "$-debug", "handy/base/1.1.1/path-
             //新页面对应History索引，如果没找到(-1)那就是首次访问
             var newIndex = History.find(newHref);
             //触发自定义事件
-            var direction;
-            if (newIndex < 0) {
-                direction = "back";
-            } else if (newIndex < oldIndex) {
-                direction = "backward";
-            } else {
-                direction = "forward";
-            }
             $(this).trigger("navigate", {
                 state: {
                     //如果在History中能获取到index，并且是在老页面索引之前，那就是“后退”了。否则，判定为前进！
-                    direction: direction
+                    direction: -1 < newIndex || newIndex < oldIndex ? "backward" : "forward",
+                    url: -1 < newIndex ? newUrl : null
                 }
             });
         }
-        console.log(History._stack);
     });
     return Navigation;
 });
