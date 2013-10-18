@@ -19,9 +19,9 @@ define(function (require, exports, module) {
 
       if (index < 0) {
         //如果是forward，则需要把current对应的数据之后的清除
+        backward || History.clearForward(this.currentHref);
         History.add(newPath.hrefNoHash, backward);
       }
-      backward && History.clearForward(newPath.hrefNoHash);
 
       this.currentHref = newPath.hrefNoHash;
     }
