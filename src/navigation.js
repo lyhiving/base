@@ -22,6 +22,7 @@ define(function (require, exports, module) {
         backward || History.clearForward(this.currentHref);
         History.add(newPath.hrefNoHash, backward);
       }
+      backward && History.clearForward(newPath.hrefNoHash);
 
       this.currentHref = newPath.hrefNoHash;
     }
